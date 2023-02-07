@@ -51,6 +51,12 @@ class ermo_fun:
 
     def ermo_help(self):
         self.stdscr.nodelay(True)
+        title_win_y = 0
+        title_win_x = self.w//2 - TITLE_WIDTH//2
+
+        title_win = self.stdscr.subwin(TITLE_HEIGHT, TITLE_WIDTH,
+                                       title_win_y, title_win_x)
+        title_win.addstr(0, 0, TITLE)
         while True:
             key = self.stdscr.getch()
 
