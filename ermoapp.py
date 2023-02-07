@@ -3,58 +3,59 @@ from datetime import timedelta
 
 from utils import functions
 
-
 waiting = timedelta(seconds=0.5)
-menu = [
-    'Clock', 'Agenda'
-]
 
 
 curses.initscr()
 
-curses.start_color()
 
+curses.start_color()
 curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
 curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
+curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)
+curses.init_pair(4, curses.COLOR_RED, curses.COLOR_BLACK)
 
 MAIN_COLOR = curses.color_pair(1)
 MAIN_COLOR_R = curses.color_pair(2)
-
-
-def print_menu(stdscr, menu_idx):
-    stdscr.clear()
-    h, w = stdscr.getmaxyx()
-
-    for idx, row in enumerate(menu):
-        x = 0
-        y = h//2 - len(menu)//2 + idx
-
-        if idx == menu_idx:
-            stdscr.addstr(y, x, row, MAIN_COLOR_R)
-        else:
-            stdscr.addstr(y, x, row, MAIN_COLOR)
+TITLE_COLOR = curses.color_pair(3)
+SECONDARY_COLOR = curses.color_pair(4)
 
 
 def main(stdscr):
+    stdscr.clear()
+    stdscr.bkgd(' ', curses.COLOR_BLACK)
     mm_idx = 0
-
-    print_menu(stdscr, mm_idx)
+    ermo_fun = functions.ermo_fun(stdscr, TITLE_COLOR, MAIN_COLOR,
+                                  MAIN_COLOR_R, SECONDARY_COLOR)
 
     while True:
+        ermo_fun.print_menu(mm_idx)
         mm_key = stdscr.getch()
         stdscr.clear()
-
-        if mm_key == ord('q'):
-            break
 
         if (mm_key == curses.KEY_UP and
                 mm_idx > 0):
             mm_idx -= 1
         elif (mm_key == curses.KEY_DOWN and
-                mm_idx < len(menu)):
+                mm_idx < len(ermo_fun.menu)):
             mm_idx += 1
 
-        print_menu(stdscr, mm_idx)
+        if mm_key == ord('q'):
+            break
+        elif (mm_key == curses.KEY_RIGHT and
+              mm_idx == 0):
+            stdscr.clear()
+            ermo_fun.ermo_help()
+
+        elif (mm_key == curses.KEY_RIGHT and
+              mm_idx == 1):
+            stdscr.clear()
+            ermo_fun.ermo_clock()
+
+        elif (mm_key == curses.KEY_RIGHT and
+              mm_idx == 2):
+            stdscr.clear()
+            ermo_fun.sms_keyboard(waiting)
 
 
 curses.wrapper(main)
