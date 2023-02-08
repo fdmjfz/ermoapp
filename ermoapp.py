@@ -36,7 +36,6 @@ def main(stdscr):
     while True:
         ermo_fun.print_menu(mm_idx)
         mm_key = stdscr.getch()
-        stdscr.clear()
 
         if (mm_key == curses.KEY_UP and
                 mm_idx > 0):
@@ -49,17 +48,16 @@ def main(stdscr):
             break
         elif (mm_key == curses.KEY_RIGHT and
               mm_idx == 0):
-            stdscr.clear()
+
             ermo_fun.ermo_help()
 
         elif (mm_key == curses.KEY_RIGHT and
               mm_idx == 1):
-            stdscr.clear()
             ermo_fun.ermo_clock()
 
         elif (mm_key == curses.KEY_RIGHT and
               mm_idx == 2):
-            stdscr.clear()
+
             ermo_fun.sms_keyboard(waiting)
 
 

@@ -50,6 +50,8 @@ class ermo_fun:
                                self.main_color)
 
     def ermo_help(self):
+        self.stdscr.clear()
+
         self.stdscr.nodelay(True)
         title_win_y = 0
         title_win_x = self.w//2 - TITLE_WIDTH//2
@@ -70,6 +72,7 @@ class ermo_fun:
         self.stdscr.nodelay(False)
 
     def ermo_clock(self):
+        self.stdscr.clear()
         self.stdscr.nodelay(True)
         while True:
             key = self.stdscr.getch()
@@ -86,13 +89,14 @@ class ermo_fun:
         self.stdscr.nodelay(False)
 
     def sms_keyboard(self, waiting):
+        self.stdscr.clear()
         idx = None
         message = str()
         while True:
             key = self.stdscr.getkey()
             if key == 'KEY_BACKSPACE':
                 message = message[:-1]
-            elif key == 'q':
+            elif key == 'KEY_LEFT':
                 break
 
             else:
