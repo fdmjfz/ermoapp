@@ -2,6 +2,7 @@ import pandas as pd
 import time
 from datetime import datetime
 from curses.textpad import Textbox
+import curses
 
 
 def lcd_clock(lcd):
@@ -36,3 +37,59 @@ def lcd_agenda(lcd, agendaIdx):
     lcd.lcd_display_string(str(row[1]), 2, 8)
 
     # time.sleep(1)
+
+
+def sms_keyboard(self, mm_idx, waiting):
+    self.print_menu(mm_idx, False)
+    idx = None
+    message = str()
+    while True:
+        key = self.stdscr.getkey()
+        if key == 'KEY_BACKSPACE':
+            message = message[:-1]
+        elif key == 'KEY_DOWN':
+            break
+
+        else:
+            start_time = datetime.now()
+            self.stdscr.nodelay(True)
+            subidx = 0
+
+            while datetime.now() - start_time <= waiting:
+                try:
+                    new_key = self.stdscr.getkey()
+                except curses.error:
+                    new_key = 0
+
+                try:
+                    idx = int(key) - 2
+                except ValueError:
+                    continue
+
+                if new_key == key:
+                    subidx += 1
+                    start_time = datetime.now()
+
+                if subidx >= len(self.num_pad[idx]):
+                    subidx -= len(self.num_pad[idx])
+
+                time.sleep(0.1)
+
+            if isinstance(idx, int):
+                if (idx >= 0 and idx <= 7):
+                    message = message + self.num_pad[idx][subidx]
+                elif idx == -1:
+                    message = message + ' '
+
+        subidx = 0
+        self.stdscr.nodelay(False)
+        self.stdscr.clear()
+        self.stdscr.refresh()
+        self.stdscr.addstr(0, 0, "idx: ")
+        self.stdscr.addstr(0, 8, str(idx))
+        self.stdscr.addstr(1, 0, "subidx: ")
+        self.stdscr.addstr(1, 8, str(subidx))
+        self.stdscr.addstr(2, 0, "messag: ")
+        self.stdscr.addstr(2, 8, message)
+
+    return message

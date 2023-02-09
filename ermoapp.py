@@ -26,29 +26,23 @@ SECONDARY_COLOR_R = curses.color_pair(5)
 
 def main(stdscr):
     mm_idx = 0
-    ermo_fun = functions.ermo_fun(stdscr, TITLE_COLOR, MAIN_COLOR,
-                                  MAIN_COLOR_R, SECONDARY_COLOR,
-                                  SECONDARY_COLOR_R)
-
+    ermo = functions.ermo_fun(stdscr, TITLE_COLOR, MAIN_COLOR,
+                              MAIN_COLOR_R, SECONDARY_COLOR,
+                              SECONDARY_COLOR_R)
+    ermo.stdscr.box()
+    ermo.display_navigation(ermo.menu, mm_idx, True,
+                            1)
     while True:
-        ermo_fun.print_menu(mm_idx, True)
-        mm_key = stdscr.getch()
+        mm_key = ermo.stdscr.getch()
+        mm_idx = ermo.update_index(menu_list=ermo.menu, key=mm_key,
+                                   index=mm_idx, horizontal=True)
+        ermo.display_navigation(menu_list=ermo.menu, index=mm_idx,
+                                horizontal=True, level=1)
 
-        if (mm_key == curses.KEY_LEFT and
-                mm_idx > 0):
-            mm_idx -= 1
-        elif (mm_key == curses.KEY_RIGHT and
-                mm_idx < len(ermo_fun.menu) - 1):
-            mm_idx += 1
-
-        if mm_key == ord('q'):
+        if mm_key == curses.KEY_UP and mm_idx == 1:
+            ermo.ermo_agenda()
+        elif mm_key == ord('q'):
             break
-        elif (mm_key == curses.KEY_UP and
-              mm_idx == 0):
-            ermo_fun.ermo_help(mm_idx)
-        elif (mm_key == curses.KEY_UP and
-              mm_idx == 1):
-            ermo_fun.ermo_agenda(mm_idx)
 
 
 curses.wrapper(main)

@@ -17,15 +17,15 @@ class ermo_fun:
                  main_color, main_color_r, secondary_color,
                  secondary_color_r):
         self.menu = [
-            'Ayuda', 'Agenda',
+            'Ayuda', 'Agenda'
         ]
         self.num_pad = [
             "abc", "def", "ghi",
             "jkl", "mno", "pqrs",
             "tuv", "wxyz"
         ]
-        self.agenda_submenu = [
-            "Cargar", "Gestionar"
+        self.agenda_menu = [
+            "prueba", "praba"
         ]
 
         self.stdscr = stdscr
@@ -36,183 +36,103 @@ class ermo_fun:
         self.secondary_color_r = secondary_color_r
         self.h, self.w = stdscr.getmaxyx()
 
-    def print_submenu(self, submenu_list, sm_idx):
-        sm_item_sep = self.w//(len(submenu_list) + 2)
-        x = sm_item_sep
+        self.stdscr.bkgd(' ', main_color)
 
-        for idx, row in enumerate(submenu_list):
-            y = self.h - 2
-
-            if idx == sm_idx:
-                self.stdscr.addstr(y, x, row,
-                                   self.secondary_color_r)
-            else:
-                self.stdscr.addstr(y, x, row,
-                                   self.secondary_color)
-            x += sm_item_sep
-
-    def print_menu(self, mm_idx, mm=True):
-        self.stdscr.bkgd(' ', self.main_color)
-        self.stdscr.clear()
-        self.stdscr.box()
-
-        if mm:
-            title_win_y = 1
-            title_win_x = self.w//2 - TITLE_WIDTH//2
-            title_win = self.stdscr.subwin(TITLE_HEIGHT, TITLE_WIDTH,
-                                           title_win_y, title_win_x)
-            title_win.addstr(0, 0, TITLE,
-                             self.title_color)
-            mm_text = "< Esq. ^ Entrar  v Saír  Der. >"
-            x_mm_text = self.w//2 - len(mm_text)//2
-            y_mm_text = self.h//2
-            self.stdscr.addstr(y_mm_text, x_mm_text, mm_text,
-                               self.secondary_color)
-
-        mm_item_sep = self.w//(len(self.menu) + 2)
-        x = mm_item_sep
-
-        for idx, row in enumerate(self.menu):
-            y = self.h - 1
-
-            if idx == mm_idx:
-                self.stdscr.addstr(y, x, row,
-                                   self.main_color_r)
-            else:
-                self.stdscr.addstr(y, x, row,
-                                   self.main_color)
-            x += mm_item_sep
-
-    def ermo_help(self, mm_idx):
-        self.print_menu(mm_idx, False)
-
-        while True:
-            key = self.stdscr.getch()
-
-            self.stdscr.refresh()
-
-            if key == curses.KEY_DOWN:
-                break
-
-    def sms_keyboard(self, mm_idx, waiting):
-        self.print_menu(mm_idx, False)
-        idx = None
-        message = str()
-        while True:
-            key = self.stdscr.getkey()
-            if key == 'KEY_BACKSPACE':
-                message = message[:-1]
-            elif key == 'KEY_DOWN':
-                break
-
-            else:
-                start_time = datetime.now()
-                self.stdscr.nodelay(True)
-                subidx = 0
-
-                while datetime.now() - start_time <= waiting:
-                    try:
-                        new_key = self.stdscr.getkey()
-                    except curses.error:
-                        new_key = 0
-
-                    try:
-                        idx = int(key) - 2
-                    except ValueError:
-                        continue
-
-                    if new_key == key:
-                        subidx += 1
-                        start_time = datetime.now()
-
-                    if subidx >= len(self.num_pad[idx]):
-                        subidx -= len(self.num_pad[idx])
-
-                    time.sleep(0.1)
-
-                if isinstance(idx, int):
-                    if (idx >= 0 and idx <= 7):
-                        message = message + self.num_pad[idx][subidx]
-                    elif idx == -1:
-                        message = message + ' '
-
-            subidx = 0
-            self.stdscr.nodelay(False)
-            self.stdscr.clear()
-            self.stdscr.refresh()
-            self.stdscr.addstr(0, 0, "idx: ")
-            self.stdscr.addstr(0, 8, str(idx))
-            self.stdscr.addstr(1, 0, "subidx: ")
-            self.stdscr.addstr(1, 8, str(subidx))
-            self.stdscr.addstr(2, 0, "messag: ")
-            self.stdscr.addstr(2, 8, message)
-
-        return message
-
-    def item_selection(self, item_list, y, x):
-        sm_sm_idx = 0
-        stored_y = y
-        while True:
-            for idx, item in enumerate(item_list):
-                if sm_sm_idx == idx:
-                    self.stdscr.addstr(y, x, str(idx),
-                                       self.main_color_r)
-                    self.stdscr.addstr(y, x + 5, item,
-                                       self.main_color_r)
-                else:
-                    self.stdscr.addstr(y, x, str(idx),
-                                       self.main_color)
-                    self.stdscr.addstr(y, x + 5, item,
-                                       self.main_color)
-                y += 1
-            # Reinicializacion del indice
-            y = stored_y
-
-            key = self.stdscr.getch()
+    def update_index(self, menu_list, key,
+                     index, horizontal=True):
+        if horizontal:
+            if (key == curses.KEY_LEFT and
+                    index > 0):
+                index -= 1
+            elif (key == curses.KEY_RIGHT and
+                  index < len(menu_list) - 1):
+                index += 1
+        else:
             if (key == curses.KEY_UP and
-                    sm_sm_idx > 0):
-                sm_sm_idx -= 1
+                    index > 0):
+                index -= 1
             elif (key == curses.KEY_DOWN and
-                  sm_sm_idx < len(item_list) - 1):
-                sm_sm_idx += 1
-            elif key == curses.KEY_RIGHT:
-                self.stdscr.clear()
-                return True, item_list[sm_sm_idx]
-            elif key == curses.KEY_LEFT:
-                self.stdscr.clear()
-                return False, None
+                  index < len(menu_list) - 1):
+                index += 1
 
-    def ermo_agenda(self, mm_idx):
-        sm_idx = 0
-        self.stdscr.clear()
+        return index
+
+    def display_navigation(self, menu_list, index,
+                           horizontal=True, level=1, scr=None):
+        if scr:
+            scr = scr
+            h, w = scr.getmaxyx()
+        else:
+            scr = self.stdscr
+            w = self.w
+            h = self.h
+
+        if horizontal:
+            x_sep = w//(len(menu_list) + 1)
+            x = x_sep
+            for idx, row in enumerate(menu_list):
+                y = h - level
+
+                if idx == index:
+                    scr.addstr(y, x, row,
+                               self.main_color_r)
+                else:
+                    scr.addstr(y, x, row,
+                               self.main_color)
+                x += x_sep
+        else:
+            scr.clear()
+            menu_list.sort()
+            x = 0
+            y = 0
+
+            # Limitación de rangos
+            if index < h:
+                menu_list = menu_list[:h]
+            else:
+                menu_list = menu_list[index-(h-1):index+1]
+                index = h-1
+
+            for idx, row in enumerate(menu_list):
+                if idx == index:
+                    scr.addstr(y + idx, x, str(idx),
+                               self.secondary_color_r)
+                    scr.addstr(y + idx, x, row,
+                               self.secondary_color_r)
+                else:
+                    scr.addstr(y + idx, x, str(idx),
+                               self.secondary_color)
+                    scr.addstr(y + idx, x, row,
+                               self.secondary_color)
+        scr.refresh()
+
+    def ermo_agenda(self):
+        x_margin = 20
+        y_margin = 10
+        agenda_width = self.w - x_margin
+        agenda_height = self.h - y_margin
+        agenda_x = x_margin//2
+        agenda_y = y_margin//2
+        agenda_win = self.stdscr.subwin(agenda_height, agenda_width,
+                                        agenda_y, agenda_x)
+
+        files = os.listdir('data')
+        files_idx = 0
+        self.display_navigation(menu_list=files, index=files_idx,
+                                horizontal=False, level=1, scr=agenda_win)
 
         while True:
-            self.print_menu(mm_idx, False)
-            self.print_submenu(self.agenda_submenu, sm_idx)
-            sm_key = self.stdscr.getch()
+            key = self.stdscr.getch()
+            files_idx = self.update_index(menu_list=files,
+                                          key=key, index=files_idx,
+                                          horizontal=False)
+            self.display_navigation(menu_list=files, index=files_idx,
+                                    horizontal=False, level=1, scr=agenda_win)
 
-            # Actualizacion del submenu index
-            if (sm_key == curses.KEY_LEFT and
-                    sm_idx > 0):
-                sm_idx -= 1
-            elif (sm_key == curses.KEY_RIGHT and
-                  sm_idx < len(self.agenda_submenu) - 1):
-                sm_idx += 1
+            agenda_win.addstr(7, 20, files[files_idx])
+            agenda_win.refresh()
 
-            # Navegacion
-            if (sm_key == curses.KEY_UP and
-                    sm_idx == 0):
-                files = os.listdir('data')
-                load_state, file = self.item_selection(files, 5, 5)
-                file = os.path.join('data', file)
-                if load_state:
-                    data = pd.read_csv(file, parse_dates=[0])
-                    columns = data.columns
-                    x_column = 5
-                    y_column = 5
-
-                    self.stdscr.addstr(y_column, x_column, columns[0])
-                    self.stdscr.addstr(y_column, x_column + 15, columns[1])
-
-            elif sm_key == curses.KEY_DOWN:
+            if key == curses.KEY_LEFT:
                 break
+
+        agenda_win.clear()
