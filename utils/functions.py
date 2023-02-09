@@ -83,15 +83,17 @@ class ermo_fun:
         else:
             scr.clear()
             menu_list.sort()
-            x = 0
-            y = 0
+            x = w//3
+            y = 1
+            list_len = h - y
 
             # Limitación de rangos
-            if index < h:
-                menu_list = menu_list[:h]
+            # Equivalencia idx = longitud - 1
+            if index < list_len:
+                menu_list = menu_list[:list_len]
             else:
-                menu_list = menu_list[index-(h-1):index+1]
-                index = h-1
+                menu_list = menu_list[index-(list_len-2):index+2]
+                index = list_len - 1
 
             for idx, row in enumerate(menu_list):
                 if idx == index:
@@ -130,9 +132,12 @@ class ermo_fun:
                                     horizontal=False, level=1, scr=agenda_win)
 
             agenda_win.addstr(7, 20, files[files_idx])
-            agenda_win.refresh()
 
-            if key == curses.KEY_LEFT:
+            if key == curses.KEY_RIGHT:
+                filepath = f'/data/{files[files_idx]}'
+                data = pd.read_csv(filepath, index=False)
+
+            elif key == curses.KEY_LEFT:
                 break
 
         agenda_win.clear()
