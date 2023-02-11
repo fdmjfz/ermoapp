@@ -1,10 +1,6 @@
 import curses
-from datetime import timedelta
-import time
 
 from utils import functions
-
-waiting = timedelta(seconds=0.5)
 
 
 curses.initscr()
@@ -29,10 +25,13 @@ def main(stdscr):
     ermo = functions.ermo_fun(stdscr, TITLE_COLOR, MAIN_COLOR,
                               MAIN_COLOR_R, SECONDARY_COLOR,
                               SECONDARY_COLOR_R)
-    ermo.stdscr.box()
-    ermo.display_navigation(ermo.menu, mm_idx, True,
-                            1)
+
     while True:
+        # Inicializacion menu
+        ermo.stdscr.box()
+        ermo.display_navigation(ermo.menu, mm_idx, True,
+                                1)
+
         mm_key = ermo.stdscr.getch()
         mm_idx = ermo.update_index(menu_list=ermo.menu, key=mm_key,
                                    index=mm_idx, horizontal=True)
@@ -41,6 +40,8 @@ def main(stdscr):
 
         if mm_key == curses.KEY_UP and mm_idx == 1:
             ermo.ermo_agenda()
+        elif mm_key == curses.KEY_UP and mm_idx == 2:
+            ermo.ermo_hc12(0.5)
         elif mm_key == ord('q'):
             break
 
