@@ -1,3 +1,5 @@
+
+import npyscreen
 import time
 from datetime import datetime, timedelta
 import pandas as pd
@@ -166,45 +168,6 @@ class ermo_fun:
             scr.refresh()
 
         return message
-
-    def display_table(self, filepath, scr=None):
-        skip = False
-        data = pd.read_csv(filepath)
-        table_idx = 0
-        x = 5
-        y = 0
-
-        if not scr:
-            scr = self.stdscr
-
-        x_restore = x
-        col_sep = 20
-        scr.clear()
-
-        while True:
-            if not skip:
-                for column in data.columns:
-                    scr.addstr(y, x, str(column) + ' /')
-                    x += col_sep
-
-                x = x_restore
-                y += 1
-
-                for row in range(0, len(data)):
-                    for element in data.iloc[row].to_list():
-                        scr.addstr(y, x, str(element) + ' /')
-                        x += col_sep
-                    x = x_restore
-                    y += 1
-
-                scr.refresh()
-            key = self.stdscr.getch()
-
-            if key == curses.KEY_LEFT:
-                scr.clear()
-                break
-            else:
-                skip = True
 
     def ermo_agenda(self):
         x_margin = 20

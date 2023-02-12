@@ -1,6 +1,6 @@
 import curses
 
-from utils import functions
+from utils import functions, agenda
 
 
 curses.initscr()
@@ -39,7 +39,19 @@ def main(stdscr):
                                 horizontal=True, level=1)
 
         if mm_key == curses.KEY_UP and mm_idx == 1:
-            ermo.ermo_agenda()
+            ermo_agenda = agenda.agenda()
+            ermo_agenda.main()
+
+            selection = ermo_agenda.selection.get_selected_objects()[0]
+            if selection == "Novo arquivo":
+                ermo_agenda.new_file()
+
+            if selection == "Ver":
+                ermo_agenda.display_txt()
+
+            elif selection == "Sair":
+                continue
+
         elif mm_key == curses.KEY_UP and mm_idx == 2:
             ermo.ermo_hc12(0.5)
         elif mm_key == ord('q'):
