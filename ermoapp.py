@@ -46,10 +46,18 @@ def main(stdscr):
             if selection == "Novo arquivo":
                 ermo_agenda.new_file()
 
-            if selection == "Ver":
+            elif selection == "Ver":
                 ermo_agenda.display_txt()
 
-            if selection == "Eliminar":
+            elif selection == "Engadir rexistro":
+                checked = ermo_agenda.add_line(line='', edit=False)
+                if checked:
+                    line = ermo.sms_keyboard(0.5)
+                    ermo_agenda.add_line(line=line, edit=True)
+            elif selection == "Eliminar rexistro":
+                ermo_agenda.delete_line()
+
+            elif selection == "Eliminar arquivo":
                 ermo_agenda.delete_file()
 
             elif selection == "Sair":

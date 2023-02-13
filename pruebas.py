@@ -1,2 +1,4 @@
-with open('data/segundo.txt', 'w') as fileout:
-    fileout.write('Prueba segunda')
+with open('data/1.txt', 'r') as filein:
+    texto = filein.read()
+
+texto = texto.split('\n')

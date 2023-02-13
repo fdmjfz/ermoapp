@@ -113,7 +113,7 @@ class ermo_fun:
         if not scr:
             scr = self.stdscr
 
-        scr.addstr(2, 0, "message: ")
+        scr.addstr(2, 0, "Nova entrada: ")
         scr.refresh()
         waiting = timedelta(seconds=waiting)
         idx = None
@@ -160,8 +160,8 @@ class ermo_fun:
             subidx = 0
             scr.clear()
             self.stdscr.nodelay(False)
-            scr.addstr(2, 0, "message: ")
-            scr.addstr(2, 8, message)
+            scr.addstr(2, 0, "Nova entrada: ")
+            scr.addstr(2, 14, message)
             scr.refresh()
 
         return message

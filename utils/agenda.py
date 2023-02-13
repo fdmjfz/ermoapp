@@ -8,8 +8,8 @@ class agenda(npyscreen.NPSApp):
         main_form = npyscreen.Form(name="Axenda")
 
         self.main_options = [
-            "Novo arquivo", "Ver", "Engadir",
-            "Eliminar", "Sair"
+            "Novo arquivo", "Ver", "Engadir rexistro",
+            "Eliminar rexistro", "Eliminar arquivo", "Sair"
         ]
         self.existent_file = main_form.add(
             npyscreen.TitleFilenameCombo,
@@ -17,7 +17,7 @@ class agenda(npyscreen.NPSApp):
 
         self.selection = main_form.add(npyscreen.TitleSelectOne,
                                        value=[len(self.main_options)-1],
-                                       max_height=5,
+                                       max_height=6,
                                        name="Accion",
                                        values=self.main_options,
                                        scroll_exit=True,
@@ -97,6 +97,60 @@ class agenda(npyscreen.NPSApp):
                                           autowrap=True,
                                           scroll_exit=True,
                                           )
+        display_txt_form.edit()
+
+    def add_line(self, line, edit=False):
+        try:
+            path = self.existent_file.value
+            name = path.rsplit('/')
+            name = name[-1]
+
+        except AttributeError:
+            message = "Non seleccionaches arquivo."
+            npyscreen.notify_wait(message=message, title='Erro',
+                form_color='WARNING')
+            return False
+
+        if edit:
+            with open(path, 'a') as fileout:
+                fileout.write('\n')
+                fileout.write(line)
+
+            with open(path, 'r') as filein:
+                lines_count = filein.read().count('\n')
+
+                nl = '\n'
+                message = f"""
+                    Engadida liña:
+                    {line}
+                    {nl}
+                    Rexistros: {lines_count}
+                    """
+                npyscreen.notify_wait(message=message, title='Éxito',
+                    form_color='VERYGOOD')
+
+        else:
+            return True
+
+    def delete_line(self):
+        display_txt_form = npyscreen.Form(name="HAHA") 
+
+        path = self.existent_file.value
+        name = path.rsplit('/')
+        name = name[-1]
+        with open(path, 'r') as filein:
+            text = filein.read()
+
+        texto = text.split('\n')
+        textio = []
+        for idx, row in enumerate(texto):
+            textio.append(f'{idx}: {row}')
+
+        self.tex = display_txt_form.add(npyscreen.Pager,
+                                  values=textio,
+                                  autowrap=True,
+                                  scroll_exit=True,
+                                  )
         display_txt_form.edit()
 
 
