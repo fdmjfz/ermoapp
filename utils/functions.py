@@ -20,15 +20,12 @@ class ermo_fun:
                  main_color, main_color_r, secondary_color,
                  secondary_color_r):
         self.menu = [
-            'Ayuda', 'Agenda', 'HC12'
+            'Axuda', 'Axenda', 'HC12'
         ]
         self.num_pad = [
             "abc", "def", "ghi",
             "jkl", "mno", "pqrs",
             "tuv", "wxyz"
-        ]
-        self.agenda_menu = [
-            "prueba", "praba"
         ]
 
         self.stdscr = stdscr

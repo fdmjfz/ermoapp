@@ -1,23 +1,11 @@
 import npyscreen
 import os
+import time
 from curses import KEY_LEFT, napms
-
-
-class NoBullShitText(npyscreen.Pager):
-    def __init__(self, *args, **kwargs):
-        kwargs["height"] = kwargs["text"].count("\n")+1
-        kwargs["values"] = kwargs["text"].split("\n")
-        kwargs["name"] = "no bullshit please"
-        kwargs["autowrap"] = True
-        kwargs["editable"] = False
-        del(kwargs["text"])
-
-        npyscreen.Pager.__init__(self, *args, **kwargs)
-
 
 class agenda(npyscreen.NPSApp):
     def main(self):
-        main_form = npyscreen.Form(name="Agenda")
+        main_form = npyscreen.Form(name="Axenda")
 
         self.main_options = [
             "Novo arquivo", "Ver", "Engadir",
@@ -40,8 +28,6 @@ class agenda(npyscreen.NPSApp):
         main_form.edit()
 
     def new_file(self):
-        self.file_types = ['.csv', '.txt']
-
         new_file_form = npyscreen.Form(name="Novo arquivo")
 
         self.new_filename = new_file_form.add(
@@ -52,25 +38,94 @@ class agenda(npyscreen.NPSApp):
         txt_name = self.new_filename.value
         filename = 'data/' + txt_name + '.txt'
 
-        with open(filename, 'w') as fileout:
-            fileout.write('')
+        if os.path.exists(filename):
+            message = f"""
+                O arquivo {filename}, xa existe.
+
+                Preme intro pra inicia-la selección.
+                """
+            write = npyscreen.notify_yes_no(message=message, title='Ollo!', form_color='WARNING')
+
+            if write:
+                overwrite = True
+            else:
+                overwrite = False
+        else:
+            overwrite = False
+            write = True
+
+        if write:
+            with open(filename, 'w') as fileout:
+                fileout.write('')
+
+            if overwrite:
+                message = f"Arquivo {filename} foi sobrescrito."
+            else:
+                message = f"Arquivo {filename} foi creado."
+
+            npyscreen.notify_wait(message=message, title="Éxito",form_color='VERYGOOD')
+        else:
+            npyscreen.notify_wait(message='Redirixindo ó menú principal.', title='Saíndo',
+                form_color='GOOD')
+
 
     def display_txt(self):
-        path = self.existent_file.value
-        nombre = path.rsplit('/')
-        nombre = nombre[-1]
+        try:
+            path = self.existent_file.value
+            name = path.rsplit('/')
+            name = name[-1]
 
-        display_txt_form = npyscreen.Form(name=nombre)
+            with open(path, 'r') as filein:
+                text = filein.read()
 
-        # TEST
-        with open(path, 'r') as filein:
-            textoa = filein.read()
+        except AttributeError:
+            message = "Non seleccionaches arquivo."
+            npyscreen.notify_wait(message=message, title='Erro',
+                form_color='WARNING')
+            return
 
-        self.texto = display_txt_form.add(npyscreen.Pager,
-                                          values=textoa.split('\n'),
+        except UnicodeDecodeError:
+            message = "O arquivo seleccionado non pode abrirse coma texto."
+            npyscreen.notify_wait(message=message, title='Erro',
+                form_color='WARNING')
+            return
+
+
+        display_txt_form = npyscreen.Form(name=name) 
+        self.tex = display_txt_form.add(npyscreen.Pager,
+                                          values=text.split('\n'),
                                           autowrap=True,
                                           scroll_exit=True,
                                           )
         display_txt_form.edit()
+
+
+    def delete_file(self):
+        try:
+            path = self.existent_file.value
+            name = path.rsplit('/')
+            name = name[-1]
+        except AttributeError:
+            message = "Non seleccionaches arquivo."
+            npyscreen.notify_wait(message=message, title='Erro',
+                form_color='WARNING')
+            return
+
+        message = f"""
+            De seguro que queres eliminar o arquivo {name} ?
+
+            Preme intro pra inicia-la selección.
+            """
+        deleted = npyscreen.notify_yes_no(message=message, title='Ollo!', form_color='WARNING')
+
+        if deleted:
+            os.remove(path)
+            message = f"""
+                O arquivo {name} foi eliminado.
+                """
+            npyscreen.notify_wait(message=message, title="Éxito",form_color='VERYGOOD')
+        else:
+            npyscreen.notify_wait(message='Redirixindo ó menú principal.', title='Saíndo',
+                form_color='GOOD')        
 
 

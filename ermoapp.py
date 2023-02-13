@@ -1,4 +1,5 @@
 import curses
+import npyscreen
 
 from utils import functions, agenda
 
@@ -18,7 +19,6 @@ MAIN_COLOR_R = curses.color_pair(2)
 TITLE_COLOR = curses.color_pair(3)
 SECONDARY_COLOR = curses.color_pair(4)
 SECONDARY_COLOR_R = curses.color_pair(5)
-
 
 def main(stdscr):
     mm_idx = 0
@@ -48,6 +48,9 @@ def main(stdscr):
 
             if selection == "Ver":
                 ermo_agenda.display_txt()
+
+            if selection == "Eliminar":
+                ermo_agenda.delete_file()
 
             elif selection == "Sair":
                 continue
