@@ -1,13 +1,24 @@
 import npyscreen
 import os
-from curses import KEY_LEFT
+from curses import KEY_LEFT, napms
+
+
+class NoBullShitText(npyscreen.Pager):
+    def __init__(self, *args, **kwargs):
+        kwargs["height"] = kwargs["text"].count("\n")+1
+        kwargs["values"] = kwargs["text"].split("\n")
+        kwargs["name"] = "no bullshit please"
+        kwargs["autowrap"] = True
+        kwargs["editable"] = False
+        del(kwargs["text"])
+
+        npyscreen.Pager.__init__(self, *args, **kwargs)
 
 
 class agenda(npyscreen.NPSApp):
     def main(self):
         main_form = npyscreen.Form(name="Agenda")
 
-        self.files = os.listdir('data')
         self.main_options = [
             "Novo arquivo", "Ver", "Engadir",
             "Eliminar", "Sair"
@@ -45,4 +56,21 @@ class agenda(npyscreen.NPSApp):
             fileout.write('')
 
     def display_txt(self):
-        pass
+        path = self.existent_file.value
+        nombre = path.rsplit('/')
+        nombre = nombre[-1]
+
+        display_txt_form = npyscreen.Form(name=nombre)
+
+        # TEST
+        with open(path, 'r') as filein:
+            textoa = filein.read()
+
+        self.texto = display_txt_form.add(npyscreen.Pager,
+                                          values=textoa.split('\n'),
+                                          autowrap=True,
+                                          scroll_exit=True,
+                                          )
+        display_txt_form.edit()
+
+
