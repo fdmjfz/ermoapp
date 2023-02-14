@@ -1,7 +1,6 @@
 import npyscreen
 import os
-import time
-from curses import KEY_LEFT, napms
+
 
 class agenda(npyscreen.NPSApp):
     def main(self):
@@ -23,7 +22,8 @@ class agenda(npyscreen.NPSApp):
                                        scroll_exit=True,
                                        )
 
-        # self.date = self.main_form.add(npyscreen.TitleDateCombo, value="Data:")
+        # self.date = self.main_form.add(npyscreen.TitleDateCombo,
+        #                              value="Data:")
 
         main_form.edit()
 
@@ -44,7 +44,8 @@ class agenda(npyscreen.NPSApp):
 
                 Preme intro pra inicia-la selección.
                 """
-            write = npyscreen.notify_yes_no(message=message, title='Ollo!', form_color='WARNING')
+            write = npyscreen.notify_yes_no(
+                message=message, title='Ollo!', form_color='WARNING')
 
             if write:
                 overwrite = True
@@ -63,11 +64,11 @@ class agenda(npyscreen.NPSApp):
             else:
                 message = f"Arquivo {filename} foi creado."
 
-            npyscreen.notify_wait(message=message, title="Éxito",form_color='VERYGOOD')
+            npyscreen.notify_wait(
+                message=message, title="Éxito", form_color='VERYGOOD')
         else:
-            npyscreen.notify_wait(message='Redirixindo ó menú principal.', title='Saíndo',
-                form_color='GOOD')
-
+            npyscreen.notify_wait(message='Redirixindo ó menú principal.',
+                                  title='Saíndo', form_color='GOOD')
 
     def display_txt(self):
         try:
@@ -77,26 +78,23 @@ class agenda(npyscreen.NPSApp):
 
             with open(path, 'r') as filein:
                 text = filein.read()
-
         except AttributeError:
             message = "Non seleccionaches arquivo."
             npyscreen.notify_wait(message=message, title='Erro',
-                form_color='WARNING')
+                                  form_color='WARNING')
             return
-
         except UnicodeDecodeError:
             message = "O arquivo seleccionado non pode abrirse coma texto."
             npyscreen.notify_wait(message=message, title='Erro',
-                form_color='WARNING')
+                                  form_color='WARNING')
             return
 
-
-        display_txt_form = npyscreen.Form(name=name) 
+        display_txt_form = npyscreen.Form(name=name)
         self.tex = display_txt_form.add(npyscreen.Pager,
-                                          values=text.split('\n'),
-                                          autowrap=True,
-                                          scroll_exit=True,
-                                          )
+                                        values=text.split('\n'),
+                                        autowrap=True,
+                                        scroll_exit=True,
+                                        )
         display_txt_form.edit()
 
     def add_line(self, line, edit=False):
@@ -105,10 +103,17 @@ class agenda(npyscreen.NPSApp):
             name = path.rsplit('/')
             name = name[-1]
 
+            with open(path, 'r') as filein:
+                filein.read().count('\n')
         except AttributeError:
             message = "Non seleccionaches arquivo."
             npyscreen.notify_wait(message=message, title='Erro',
-                form_color='WARNING')
+                                  form_color='WARNING')
+            return False
+        except UnicodeDecodeError:
+            message = "O arquivo seleccionado non pode abrirse coma texto."
+            npyscreen.notify_wait(message=message, title='Erro',
+                                  form_color='WARNING')
             return False
 
         if edit:
@@ -127,32 +132,70 @@ class agenda(npyscreen.NPSApp):
                     Rexistros: {lines_count}
                     """
                 npyscreen.notify_wait(message=message, title='Éxito',
-                    form_color='VERYGOOD')
+                                      form_color='VERYGOOD')
 
         else:
             return True
 
     def delete_line(self):
-        display_txt_form = npyscreen.Form(name="HAHA") 
+        try:
+            path = self.existent_file.value
+            name = path.rsplit('/')
+            name = name[-1]
 
-        path = self.existent_file.value
-        name = path.rsplit('/')
-        name = name[-1]
+            with open(path, 'r') as filein:
+                filein.read().count('\n')
+        except AttributeError:
+            message = "Non seleccionaches arquivo."
+            npyscreen.notify_wait(message=message, title='Erro',
+                                  form_color='WARNING')
+            return False
+        except UnicodeDecodeError:
+            message = "O arquivo seleccionado non pode abrirse coma texto."
+            npyscreen.notify_wait(message=message, title='Erro',
+                                  form_color='WARNING')
+            return False
+
+        display_txt_form = npyscreen.Form(name=name)
+
         with open(path, 'r') as filein:
             text = filein.read()
 
         texto = text.split('\n')
-        textio = []
+        text_list = []
         for idx, row in enumerate(texto):
-            textio.append(f'{idx}: {row}')
+            text_list.append(f'{idx}~  {row}')
 
-        self.tex = display_txt_form.add(npyscreen.Pager,
-                                  values=textio,
-                                  autowrap=True,
-                                  scroll_exit=True,
-                                  )
+        display_txt_form.add(npyscreen.Pager,
+                             values=text_list,
+                             autowrap=True,
+                             scroll_exit=True,
+                             max_height=12
+                             )
+        idx_r = display_txt_form.add(npyscreen.TitleText,
+                                     name='Ingresa o número de liña:',
+                                     scroll_exit=True)
+
         display_txt_form.edit()
 
+        try:
+            idx_r = int(idx_r.value)
+            text_list.pop(idx_r)
+        except ValueError:
+            message = "O valor introducido non é válido."
+            npyscreen.notify_wait(message=message, title='Erro',
+                                  form_color='WARNING')
+        except IndexError:
+            message = "O valor introducido está fora de rango."
+            npyscreen.notify_wait(message=message, title='Erro',
+                                  form_color='WARNING')
+
+        new_text = [i.split('~')[1].replace(' ', '') for i in text_list]
+
+        with open(path, 'w') as fileout:
+            for j in new_text:
+                fileout.write(j)
+                fileout.write('\n')
 
     def delete_file(self):
         try:
@@ -162,7 +205,7 @@ class agenda(npyscreen.NPSApp):
         except AttributeError:
             message = "Non seleccionaches arquivo."
             npyscreen.notify_wait(message=message, title='Erro',
-                form_color='WARNING')
+                                  form_color='WARNING')
             return
 
         message = f"""
@@ -170,16 +213,16 @@ class agenda(npyscreen.NPSApp):
 
             Preme intro pra inicia-la selección.
             """
-        deleted = npyscreen.notify_yes_no(message=message, title='Ollo!', form_color='WARNING')
+        deleted = npyscreen.notify_yes_no(
+            message=message, title='Ollo!', form_color='WARNING')
 
         if deleted:
             os.remove(path)
             message = f"""
                 O arquivo {name} foi eliminado.
                 """
-            npyscreen.notify_wait(message=message, title="Éxito",form_color='VERYGOOD')
+            npyscreen.notify_wait(
+                message=message, title="Éxito", form_color='VERYGOOD')
         else:
-            npyscreen.notify_wait(message='Redirixindo ó menú principal.', title='Saíndo',
-                form_color='GOOD')        
-
-
+            npyscreen.notify_wait(message='Redirixindo ó menú principal.',
+                                  title='Saíndo', form_color='GOOD')
