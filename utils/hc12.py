@@ -35,6 +35,6 @@ class ermo_hc12:
                 return output
 
     def transmit(self, string='0'):
-        message = f'{self.device_type}{self.device_id}~' + message
+        message = f'{self.device_type}{self.device_id}~' + string
         message = message + '>'
         self.serial.write(bytes(message, encoding='utf-8'))
