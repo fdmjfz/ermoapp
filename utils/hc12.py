@@ -67,6 +67,7 @@ class ermo_hc12:
             a.values = text.split('\n')
 
             main_form.display()
+            main_form.edit()
 
     def line_prepender(self, line):
         with open(self.txt_path, 'r+') as fileout:
