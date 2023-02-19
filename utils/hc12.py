@@ -4,7 +4,8 @@ import os
 
 
 class ermo_hc12:
-    def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600):
+    def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600,
+                 timeout=1):
         self.txt_path = os.path.join('data', 'hc12_messages.txt')
 
         self.device_id = os.getenv('LOGNAME')
@@ -13,7 +14,7 @@ class ermo_hc12:
         self.serial = serial.Serial(
             port=serial_port,
             baudrate=baud_rate,
-            timeout=10,
+            timeout=timeout,
         )
 
         if not os.path.exists(self.txt_path):
@@ -51,3 +52,11 @@ class ermo_hc12:
             message = f'{self.device_type}{self.device_id}~' + string
             message = message + '>'
             self.serial.write(bytes(message, encoding='utf-8'))
+
+    def hc12_view(self, stdscr):
+        while True:
+            message = self.receive()
+
+            stdscr.addstr(5, 5, message)
+            stdscr.refresh()
+            stdscr.getch()

@@ -1,6 +1,6 @@
 import curses
 
-from utils import functions, agenda
+from utils import functions, agenda, hc12
 
 
 curses.initscr()
@@ -37,6 +37,7 @@ def main(stdscr):
                                    index=mm_idx, horizontal=True)
         ermo.display_navigation(menu_list=ermo.menu, index=mm_idx,
                                 horizontal=True, level=1)
+        ermohc12 = hc12.ermo_hc12()
 
         if mm_key == curses.KEY_UP and mm_idx == 1:
             ermo_agenda = agenda.agenda()
@@ -64,7 +65,8 @@ def main(stdscr):
                 continue
 
         elif mm_key == curses.KEY_UP and mm_idx == 2:
-            ermo.ermo_hc12(0.5)
+            ermohc12.view(ermo.stdscr, timeout=2)
+
         elif mm_key == ord('q'):
             break
 
