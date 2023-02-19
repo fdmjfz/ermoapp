@@ -37,7 +37,7 @@ def main(stdscr):
                                    index=mm_idx, horizontal=True)
         ermo.display_navigation(menu_list=ermo.menu, index=mm_idx,
                                 horizontal=True, level=1)
-        ermohc12 = hc12.ermo_hc12(timeout=4)
+        ermohc12 = hc12.ermo_hc12(timeout=1)
 
         if mm_key == curses.KEY_UP and mm_idx == 1:
             ermo_agenda = agenda.agenda()
