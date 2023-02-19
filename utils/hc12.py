@@ -12,18 +12,20 @@ class ermo_hc12:
 
     def receive(self):
         x = self.serial.read_until(bytes('>', encoding='utf-8'))
-        message = x.decode('utf-8')
-        message = message.replace('>', '')
 
-        items_list = message.split('~')
+        if len(x) > 0:
+            message = x.decode('utf-8')
+            message = message.replace('>', '')
 
-        device_info = items_list[0].split(',')
-        device_id = device_info[0]
-        device_type = device_info[1]
+            items_list = message.split('~')
 
-        text = items_list[1]
+            device_info = items_list[0].split(',')
+            device_id = device_info[0]
+            device_type = device_info[1]
 
-        if device_type == 'u':
-            output = f'{device_id}: {text}'
+            text = items_list[1]
 
-            return output
+            if device_type == 'u':
+                output = f'{device_id}: {text}'
+
+                return output
