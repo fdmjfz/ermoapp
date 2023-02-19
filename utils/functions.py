@@ -1,11 +1,6 @@
-
-import npyscreen
 import time
 from datetime import datetime, timedelta
-import pandas as pd
 import curses
-import serial
-import os
 
 from utils import drawings
 
