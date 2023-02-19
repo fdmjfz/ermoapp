@@ -11,7 +11,7 @@ class ermo_hc12:
         )
 
     def receive(self):
-        x = ser.read_until(bytes('>', encoding='utf-8'))
+        x = self.serial.read_until(bytes('>', encoding='utf-8'))
         message = x.decode('utf-8')
         message = message.replace('>', '')
 
