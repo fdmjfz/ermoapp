@@ -1,9 +1,11 @@
 import serial
+from datetime import datetime
 import os
 
 
 class ermo_hc12:
     def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600):
+        self.txt_path = os.path.join('data', 'hc12_messages.txt')
 
         self.device_id = os.getenv('LOGNAME')
         self.device_type = 'u'
@@ -14,7 +16,10 @@ class ermo_hc12:
             timeout=10,
         )
 
-    def receive(self):
+        if not os.path.exists(self.txt_path):
+            open(self.txt_path, 'w')
+
+    def receive(self, store=False):
         x = self.serial.read_until(bytes('>', encoding='utf-8'))
 
         if len(x) > 0:
@@ -31,6 +36,13 @@ class ermo_hc12:
 
             if device_type == 'u':
                 output = f'{device_id}: {text}'
+                ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                output = ts + '@' + output
+
+                if store:
+                    with open(self.txt_path, 'a') as fileout:
+                        fileout.write('\n')
+                        fileout.write(output)
 
                 return output
 
