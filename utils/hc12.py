@@ -56,7 +56,7 @@ class ermo_hc12:
         main_form = npyscreen.Form(name='HC12')
         a = main_form.add(npyscreen.Pager,
                           autowrap=True,
-                          max_height=5,
+                          max_height=8,
                           )
 
         while True:
@@ -67,7 +67,6 @@ class ermo_hc12:
             a.values = text.split('\n')
 
             main_form.display()
-            main_form.edit()
 
     def line_prepender(self, line):
         with open(self.txt_path, 'r+') as fileout:
