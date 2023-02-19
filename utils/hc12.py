@@ -58,7 +58,9 @@ class ermo_hc12:
                           autowrap=True,
                           scroll_exit=True,
                           max_height=5,
-                          return_exit=True
+                          return_exit=True,
+                          editing=False,
+                          editable=False
                           )
 
         while True:
