@@ -1,7 +1,17 @@
 import curses
+import threading
 
 from utils import functions, agenda, hc12
 
+
+def myfun():
+    ermohc12.receive(True)
+
+
+ermohc12 = hc12.ermo_hc12(timeout=1)
+
+a = threading.Thread(target=myfun, name='jeje')
+a.start()
 
 curses.initscr()
 curses.curs_set(False)
@@ -37,7 +47,6 @@ def main(stdscr):
                                    index=mm_idx, horizontal=True)
         ermo.display_navigation(menu_list=ermo.menu, index=mm_idx,
                                 horizontal=True, level=1)
-        ermohc12 = hc12.ermo_hc12(timeout=1)
 
         if mm_key == curses.KEY_UP and mm_idx == 1:
             ermo_agenda = agenda.agenda()

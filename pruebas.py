@@ -1,18 +1,11 @@
-path = 'data/1.txt'
-idx_r = 2
+import threading
+import time
 
-with open(path, 'r') as filein:
-    text = filein.read()
 
-texto = text.split('\n')
-text_list = []
-for idx, row in enumerate(texto):
-    text_list.append(f'{idx}~  {row}')
+def myfun():
+    print("HAHAH")
+    time.sleep(2)
 
-text_list.pop(idx_r)
-new_text = [i.split('~')[1].replace(' ', '') for i in text_list]
 
-with open(path, 'w') as fileout:
-    for i in new_text:
-        fileout.write(i)
-        fileout.write('\n')
+a = threading.Thread(target=myfun, name='jeje')
+a.start()
