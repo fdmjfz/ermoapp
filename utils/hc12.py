@@ -5,11 +5,13 @@ from curses import KEY_DOWN
 import time
 import os
 
+TXT_PATH = os.path.join('data', 'hc12_messages.txt')
+
 
 class ermo_hc12:
     def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600,
                  timeout=1):
-        self.txt_path = os.path.join('data', 'hc12_messages.txt')
+        self.txt_path = TXT_PATH
 
         self.device_id = os.getenv('LOGNAME')
         self.device_type = 'u'
@@ -72,12 +74,10 @@ def hc12_main_view(stdscr):
     while True:
         key = stdscr.getch()
 
-        message = .receive(True)
-
-        with open(.txt_path, 'r') as filein:
+        with open(TXT_PATH, 'r') as filein:
             text = filein.read()
-        a.values = text.split('\n')
 
+        a.values = text.split('\n')
         main_form.display()
 
         if key == KEY_DOWN:
