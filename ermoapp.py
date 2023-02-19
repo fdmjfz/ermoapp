@@ -5,12 +5,14 @@ from utils import functions, agenda, hc12
 
 
 def myfun():
-    ermohc12.receive(True)
+    while True:
+        ermohc12.receive(True)
 
 
 ermohc12 = hc12.ermo_hc12(timeout=1)
 
-a = threading.Thread(target=myfun, name='jeje')
+
+a = threading.Thread(target=myfun, daemon=True, name='jeje')
 a.start()
 
 curses.initscr()
