@@ -55,9 +55,11 @@ class ermo_hc12:
 
     def hc12_view(self, stdscr, timeout):
         while True:
-            message = self.receive()
+            message = self.receive(True)
 
-            if message:
-                stdscr.addstr(5, 5, message)
-                stdscr.refresh()
-                stdscr.getch()
+            with open(self.txt_path, 'r') as filein:
+                text = filein.read()
+
+            stdscr.clear()
+            stdscr.addstr(1, 1, text)
+            stdscr.refresh()
