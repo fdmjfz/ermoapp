@@ -39,6 +39,4 @@ def copy_from(filename):
     ssh.close()
 
 
-copy_to('ermoapp.py')
-
-copy_from('ermoapp.py')
+copy_to('utils/hc12.py')
