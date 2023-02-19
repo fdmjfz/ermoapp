@@ -62,7 +62,7 @@ class ermo_hc12:
             stdscr.addstr(1, 1, text)
             stdscr.refresh()
 
-    def line_prepender(line):
+    def line_prepender(self, line):
         with open(self.txt_path, 'r+') as fileout:
             content = fileout.read()
             fileout.seek(0, 0)
