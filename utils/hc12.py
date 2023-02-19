@@ -25,7 +25,7 @@ class ermo_hc12:
         if not os.path.exists(self.txt_path):
             open(self.txt_path, 'w')
 
-    def receive(self, store=False):
+    def receive(self):
         x = self.serial.read_until(bytes('>', encoding='utf-8'))
 
         if len(x) > 0:
@@ -45,10 +45,13 @@ class ermo_hc12:
                 ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 output = ts + '@' + output
 
-                if store:
-                    self.line_prepender(output)
+                self.line_prepender(output)
 
                 return output
+
+    def receive_continuously(self):
+        while True:
+            self.receive()
 
     def transmit(self, string):
         if string:

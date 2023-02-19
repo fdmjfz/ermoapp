@@ -4,16 +4,10 @@ import threading
 from utils import functions, agenda, hc12
 
 
-def myfun():
+def autoupdate_hc12():
     while True:
         ermohc12.receive(True)
 
-
-ermohc12 = hc12.ermo_hc12(timeout=1)
-
-
-a = threading.Thread(target=myfun, daemon=True, name='jeje')
-a.start()
 
 curses.initscr()
 curses.curs_set(False)
@@ -30,6 +24,13 @@ MAIN_COLOR_R = curses.color_pair(2)
 TITLE_COLOR = curses.color_pair(3)
 SECONDARY_COLOR = curses.color_pair(4)
 SECONDARY_COLOR_R = curses.color_pair(5)
+
+ermohc12 = hc12.ermo_hc12(timeout=10)
+
+# Background threading
+bg_task = threading.Thread(target=ermohc12.receive_continuously, daemon=True,
+                           name='Autoupdate HC12')
+bg_task.start()
 
 
 def main(stdscr):
