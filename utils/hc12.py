@@ -57,6 +57,7 @@ class ermo_hc12:
         while True:
             message = self.receive()
 
-            stdscr.addstr(5, 5, message)
-            stdscr.refresh()
-            stdscr.getch()
+            if len(message) > 0:
+                stdscr.addstr(5, 5, message)
+                stdscr.refresh()
+                stdscr.getch()
