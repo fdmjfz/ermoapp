@@ -2,6 +2,7 @@ import serial
 import npyscreen
 from datetime import datetime
 from curses import KEY_DOWN
+import time
 import os
 
 
@@ -53,32 +54,35 @@ class ermo_hc12:
             message = message + '>'
             self.serial.write(bytes(message, encoding='utf-8'))
 
-    def hc12_main_view(self, stdscr):
-        main_form = npyscreen.Form(name='HC12')
-        a = main_form.add(npyscreen.Pager,
-                          autowrap=True,
-                          max_height=8,
-                          height=10,
-                          )
-        stdscr.nodelay(True)
-        while True:
-            key = stdscr.getch()
-
-            message = self.receive(True)
-
-            with open(self.txt_path, 'r') as filein:
-                text = filein.read()
-            a.values = text.split('\n')
-
-            main_form.display()
-
-            if key == KEY_DOWN:
-                break
-
-        stdscr.nodelay(False)
-
     def line_prepender(self, line):
         with open(self.txt_path, 'r+') as fileout:
             content = fileout.read()
             fileout.seek(0, 0)
             fileout.write(line.rstrip('\r\n') + '\n' + content)
+
+
+def hc12_main_view(stdscr):
+    main_form = npyscreen.Form(name='HC12')
+    a = main_form.add(npyscreen.Pager,
+                      autowrap=True,
+                      max_height=8,
+                      height=10,
+                      )
+    stdscr.nodelay(True)
+    while True:
+        key = stdscr.getch()
+
+        message = .receive(True)
+
+        with open(.txt_path, 'r') as filein:
+            text = filein.read()
+        a.values = text.split('\n')
+
+        main_form.display()
+
+        if key == KEY_DOWN:
+            break
+
+        time.sleep(2)
+
+    stdscr.nodelay(False)
