@@ -67,6 +67,7 @@ class ermo_hc12:
                           scroll_exit=True,
                           max_height=5
                           )
+            main_form.edit()
 
     def line_prepender(self, line):
         with open(self.txt_path, 'r+') as fileout:
