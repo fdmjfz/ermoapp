@@ -54,20 +54,19 @@ class ermo_hc12:
 
     def hc12_main_view(self, stdscr):
         main_form = npyscreen.Form(name='HC12')
+        a = main_form.add(npyscreen.Pager,
+                          autowrap=True,
+                          scroll_exit=True,
+                          max_height=5,
+                          return_exit=True
+                          )
 
         while True:
             message = self.receive(True)
 
             with open(self.txt_path, 'r') as filein:
                 text = filein.read()
-
-            main_form.add(npyscreen.Pager,
-                          values=text.split('\n'),
-                          autowrap=True,
-                          scroll_exit=True,
-                          max_height=5
-                          )
-            main_form.edit()
+            a.values = text.split('\n')
 
     def line_prepender(self, line):
         with open(self.txt_path, 'r+') as fileout:
