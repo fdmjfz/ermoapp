@@ -58,6 +58,7 @@ class ermo_hc12:
         a = main_form.add(npyscreen.Pager,
                           autowrap=True,
                           max_height=8,
+                          height=10,
                           )
         stdscr.nodelay(True)
         while True:
