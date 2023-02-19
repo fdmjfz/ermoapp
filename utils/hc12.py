@@ -53,7 +53,7 @@ class ermo_hc12:
             message = message + '>'
             self.serial.write(bytes(message, encoding='utf-8'))
 
-    def hc12_view(self, stdscr, timeout):
+    def hc12_view(self, stdscr):
         while True:
             message = self.receive(True)
 
