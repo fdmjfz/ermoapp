@@ -67,6 +67,7 @@ class ermo_hc12:
             with open(self.txt_path, 'r') as filein:
                 text = filein.read()
             a.values = text.split('\n')
+            a.edit()
 
     def line_prepender(self, line):
         with open(self.txt_path, 'r+') as fileout:
