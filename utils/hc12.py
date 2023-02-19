@@ -56,9 +56,7 @@ class ermo_hc12:
         main_form = npyscreen.Form(name='HC12')
         a = main_form.add(npyscreen.Pager,
                           autowrap=True,
-                          scroll_exit=True,
                           max_height=5,
-                          return_exit=True,
                           editing=False,
                           editable=False
                           )
