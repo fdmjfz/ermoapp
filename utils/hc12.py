@@ -4,8 +4,10 @@ import os
 
 class ermo_hc12:
     def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600):
-        self.host_name = os.getenv('LOGNAME')
+
+        self.device_id = os.getenv('LOGNAME')
         self.device_type = 'u'
+
         self.serial = serial.Serial(
             port=serial_port,
             baudrate=baud_rate,
@@ -33,6 +35,6 @@ class ermo_hc12:
                 return output
 
     def transmit(self, string='0'):
-        message = f'{device_type}{device_id}~' + message
+        message = f'{self.device_type}{self.device_id}~' + message
         message = message + '>'
         self.serial.write(bytes(message, encoding='utf-8'))
