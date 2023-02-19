@@ -65,7 +65,7 @@ def main(stdscr):
                 continue
 
         elif mm_key == curses.KEY_UP and mm_idx == 2:
-            ermohc12.hc12_view(ermo.stdscr)
+            ermohc12.hc12_main_view(ermo.stdscr)
 
         elif mm_key == ord('q'):
             break

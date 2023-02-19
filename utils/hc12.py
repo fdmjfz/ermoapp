@@ -41,9 +41,7 @@ class ermo_hc12:
                 output = ts + '@' + output
 
                 if store:
-                    with open(self.txt_path, 'a') as fileout:
-                        fileout.write('\n')
-                        fileout.write(output)
+                    self.line_prepender(output)
 
                 return output
 
@@ -53,7 +51,7 @@ class ermo_hc12:
             message = message + '>'
             self.serial.write(bytes(message, encoding='utf-8'))
 
-    def hc12_view(self, stdscr):
+    def hc12_main_view(self, stdscr):
         while True:
             message = self.receive(True)
 
@@ -63,3 +61,9 @@ class ermo_hc12:
             stdscr.clear()
             stdscr.addstr(1, 1, text)
             stdscr.refresh()
+
+    def line_prepender(line):
+        with open(self.txt_path, 'r+') as fileout:
+            content = fileout.read()
+            fileout.seek(0, 0)
+            fileout.write(line.rstrip('\r\n') + '\n' + content)
