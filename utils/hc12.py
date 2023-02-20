@@ -112,9 +112,10 @@ def hc12_main_view(stdscr):
             break
         elif key == ord('1'):
             message = main_form.add(npyscreen.TitleText,
-                                    title="Mensaxe: ")
+                                    name="Mensaxe: ")
             main_form.edit()
             message = message.get_value()
+            break
 
     stdscr.nodelay(False)
     return message
