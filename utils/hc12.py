@@ -115,7 +115,7 @@ def hc12_main_view(stdscr):
         main_form.display()
 
         message = ''
-        time.sleep(2)
+        time.sleep(1)
 
         if key == KEY_DOWN:
             break
