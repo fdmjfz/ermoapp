@@ -75,11 +75,13 @@ class ermo_hc12:
 
         self.serial.write(bytes('AT', encoding='utf-8'))
         response = self.serial.read_until()
+        response.decode(response, encoding='utf-8')
 
         if response == 'OK':
             print("Completado")
 
         GPIO.output(self.set_pin, 1)
+        time.sleep(1)
 
 
 def hc12_main_view(stdscr):
