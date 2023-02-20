@@ -75,9 +75,9 @@ class ermo_hc12:
 
         self.serial.write(bytes('AT', encoding='utf-8'))
         response = self.serial.read_until()
-        self.response = response.decode('utf-8')
+        self.test = response.decode('utf-8')
 
-        print(response)
+        print(self.test)
 
         GPIO.output(self.set_pin, 1)
         time.sleep(1)
