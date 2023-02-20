@@ -4,11 +4,6 @@ import threading
 from utils import functions, agenda, hc12
 
 
-def autoupdate_hc12():
-    while True:
-        ermohc12.receive(True)
-
-
 curses.initscr()
 curses.curs_set(False)
 

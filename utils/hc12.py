@@ -2,6 +2,7 @@ import serial
 import npyscreen
 from datetime import datetime
 from curses import KEY_DOWN
+import RPi.GPIO as GPIO
 import time
 import os
 
@@ -10,11 +11,13 @@ TXT_PATH = os.path.join('data', 'hc12_messages.txt')
 
 class ermo_hc12:
     def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600,
-                 timeout=1):
+                 timeout=1, set_hd12_pin=12):
+
         self.txt_path = TXT_PATH
 
         self.device_id = os.getenv('LOGNAME')
         self.device_type = 'u'
+        self.set_pin = set_hd12_pin
 
         self.serial = serial.Serial(
             port=serial_port,
@@ -24,6 +27,10 @@ class ermo_hc12:
 
         if not os.path.exists(self.txt_path):
             open(self.txt_path, 'w')
+
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(self.set_pin, GPIO.OUT)
+        GPIO.output(self.set_pin, 1)
 
     def receive(self):
         x = self.serial.read_until(bytes('>', encoding='utf-8'))
@@ -45,7 +52,10 @@ class ermo_hc12:
                 ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 output = ts + '@' + output
 
-                self.line_prepender(output)
+                with open(self.txt_path, 'r+') as fileout:
+                    content = fileout.read()
+                    fileout.seek(0, 0)
+                    fileout.write(output.rstrip('\r\n') + '\n' + content)
 
                 return output
 
@@ -59,11 +69,17 @@ class ermo_hc12:
             message = message + '>'
             self.serial.write(bytes(message, encoding='utf-8'))
 
-    def line_prepender(self, line):
-        with open(self.txt_path, 'r+') as fileout:
-            content = fileout.read()
-            fileout.seek(0, 0)
-            fileout.write(line.rstrip('\r\n') + '\n' + content)
+    def configure(self):
+        GPIO.output(self.set_pin, 0)
+        time.sleep(1)
+
+        self.serial.write(bytes('AT', encoding='utf-8'))
+        response = self.serial.read_until()
+
+        if response == 'OK':
+            print("Completado")
+
+        GPIO.output(self.set_pin, 1)
 
 
 def hc12_main_view(stdscr):
