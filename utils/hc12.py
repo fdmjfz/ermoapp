@@ -115,6 +115,7 @@ def hc12_main_view(stdscr):
                                     name="Mensaxe: ")
             main_form.edit()
             message = message.get_value()
+            break
 
     stdscr.nodelay(False)
     return message
