@@ -69,6 +69,15 @@ class ermo_hc12:
             message = message + '>'
             self.serial.write(bytes(message, encoding='utf-8'))
 
+            output = f'{self.device_id}: {string}'
+            ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            output = ts + '@' + output
+
+            with open(self.txt_path, 'r+') as fileout:
+                content = fileout.read()
+                fileout.seek(0, 0)
+                fileout.write(output.rstrip('\r\n') + '\n' + content)
+
     def configure(self):
         GPIO.output(self.set_pin, 0)
         time.sleep(1)
