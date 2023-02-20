@@ -93,6 +93,9 @@ def hc12_main_view(stdscr):
                       max_height=8,
                       height=10,
                       )
+    main_form.add(npyscreen.AnnotateTextboxBase(
+        value="heheh"
+    ))
     stdscr.nodelay(True)
     while True:
         key = stdscr.getch()
@@ -109,3 +112,4 @@ def hc12_main_view(stdscr):
         time.sleep(2)
 
     stdscr.nodelay(False)
+    return None
