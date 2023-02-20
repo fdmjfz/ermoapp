@@ -87,7 +87,7 @@ class ermo_hc12:
 
 
 def hc12_main_view(stdscr):
-    name = 'HC12  1 Mensaxe QWERTY | 2 Mensaxe SMS | 3 Configuración'
+    name = 'HC12 || 1 Mensaxe QWERTY | 2 Mensaxe SMS | 3 Configuración'
     main_form = npyscreen.Form(name=name)
     a = main_form.add(npyscreen.Pager,
                       autowrap=True,
