@@ -113,7 +113,7 @@ def hc12_main_view(stdscr):
             main_form.edit()
 
             stdscr.clear()
-            stdscr.addstr(5, 5, str(message.values))
+            stdscr.addstr(5, 5, str(message.get_value()))
             stdscr.refresh()
 
         time.sleep(2)
