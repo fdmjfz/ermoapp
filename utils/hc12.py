@@ -75,7 +75,7 @@ class ermo_hc12:
 
         self.serial.write(bytes('AT', encoding='utf-8'))
         response = self.serial.read_until()
-        response = response.decode('utf-8')
+        self.response = response.decode('utf-8')
 
         print(response)
 
