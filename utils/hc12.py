@@ -25,9 +25,6 @@ class ermo_hc12:
             timeout=timeout,
         )
 
-        if not os.path.exists(self.txt_path):
-            open(self.txt_path, 'w')
-
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.set_pin, GPIO.OUT)
         GPIO.output(self.set_pin, 1)
@@ -96,6 +93,9 @@ class ermo_hc12:
 
 
 def hc12_main_view(stdscr):
+    if not os.path.exists(TXT_PATH):
+        open(TXT_PATH, 'w')
+
     name = 'HC12 || 1 Mensaxe QWERTY | 2 Mensaxe SMS | 3 Configuración'
     main_form = npyscreen.Form(name=name)
     a = main_form.add(npyscreen.Pager,
