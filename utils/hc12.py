@@ -78,8 +78,9 @@ class ermo_hc12:
         response = response.decode('utf-8')
         response = response.replace('\r\n', '')
 
-        if response == 'OK':
-            print("TOMALO")
+        if response != 'OK':
+            GPIO.output(self.set_pin, 1)
+            return
 
         GPIO.output(self.set_pin, 1)
         time.sleep(1)
