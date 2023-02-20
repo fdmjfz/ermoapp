@@ -107,6 +107,9 @@ def hc12_main_view(stdscr):
 
         if key == KEY_DOWN:
             break
+        elif key == ord(1):
+            main_form.add(npyscreen.TitleText,
+                          title="Mensaxe: ")
 
         time.sleep(2)
 
