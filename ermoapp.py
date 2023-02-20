@@ -73,7 +73,7 @@ def main(stdscr):
 
         elif mm_key == curses.KEY_UP and mm_idx == 2:
             message = hc12.hc12_main_view(ermo.stdscr)
-            ermohc12.transmit(str(message))
+            ermohc12.transmit(message)
 
         elif mm_key == ord('q'):
             break
