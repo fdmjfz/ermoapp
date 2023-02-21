@@ -87,13 +87,17 @@ class ermo_hc12:
 
         if response == 'OK':
             if status:
+                params = ['baud_rate', 'channel', 'power',
+                          'mode']
+                report = {}
                 self.serial.write(bytes('AT+RX', encoding='utf-8'))
 
-                report = [self.serial.read_until().decode('utf-8')
-                          for i in range(0, 4)]
+                for param in params:
+                    value = self.serial.read_until().decode('utf-8')
+                    value = value.replace('\r\n', '')
+                    report[param] = value
 
                 GPIO.output(self.set_pin, 1)
-                print("True")
                 return report
             else:
                 GPIO.output(self.set_pin, 1)
