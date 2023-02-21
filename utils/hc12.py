@@ -101,7 +101,7 @@ def transmit(string):
             fileout.write(output.rstrip('\r\n') + '\n' + content)
 
 
-def configure(status=False):
+def configure(command_list=None):
     GPIO.output(set_pin, 0)
     time.sleep(1.2)
 
@@ -111,7 +111,7 @@ def configure(status=False):
     response = response.replace('\r\n', '')
 
     if response == 'OK':
-        if status:
+        if not command_list:
             params = ['baud_rate', 'channel', 'power',
                       'mode']
             report = {}
@@ -131,6 +131,14 @@ def configure(status=False):
             GPIO.output(set_pin, 1)
             return report
         else:
+            for command in command_list:
+                serial.write(bytes(command, encoding='utf-8'))
+                time.sleep(0.1)
+                response = serial.read_until().decode('utf-8')
+                response = response.replace('\r\n', '')
+                if response != command.replace('AT', 'OK'):
+                    9/0
+
             GPIO.output(set_pin, 1)
             return
 
@@ -204,13 +212,29 @@ def hc12_main_view(stdscr):
                                       ['opts'].index(report['mode'])]
                                )
 
+            # PREPROCESAMIENTO PARA OBTENER LISTA DE COMANDOS AL HC12
             hc12_config_form.edit()
-            channel_set = channel.get_value()
+            channel_set = int(channel.get_value())
             baud_rate_set = CONFIG_OPTS['baud_rate']['opts'][baud_rate.get_value()[
                 0]]
             power_set = power.get_values()[power.get_value()[0]]
             power_set = CONFIG_OPTS['power']['opts'][power_set]
             fu_set = CONFIG_OPTS['mode']['opts'][fu.get_value()[0]]
+
+            channel_set = str(channel_set)
+            while len(channel_set) < 3:
+                channel_set = '0' + channel_set
+            channel_command = CONFIG_OPTS['channel']['command'] + channel_set
+            baud_rate_command = CONFIG_OPTS['baud_rate']['command'] + \
+                str(baud_rate_set)
+            power_command = CONFIG_OPTS['power']['command'] + str(power_set)
+            fu_command = CONFIG_OPTS['mode']['comand'] + str(fu_set)
+
+            command_list = [channel_command, baud_rate_command, power_command,
+                            fu_command]
+
+            # ENVIO DE COMANDOS AL HC12
+            configure(command_list=command_list)
 
             stdscr.nodelay(True)
 

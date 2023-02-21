@@ -77,17 +77,25 @@ def main(stdscr):
                        )
 
     main_form.edit()
-    channel_set = channel.get_value()
+    channel_set = int(channel.get_value())
     baud_rate_set = config_opts['baud_rate']['opts'][baud_rate.get_value()[0]]
     power_set = power.get_values()[power.get_value()[0]]
     power_set = config_opts['power']['opts'][power_set]
     fu_set = config_opts['mode']['opts'][fu.get_value()[0]]
 
+    channel_set = str(channel_set)
+    while len(channel_set) < 3:
+        channel_set = '0' + channel_set
+    channel_command = config_opts['channel']['command'] + channel_set
+    baud_rate_command = config_opts['baud_rate']['command'] + \
+        str(baud_rate_set)
+    power_command = config_opts['power']['command'] + str(power_set)
+    fu_command = config_opts['mode']['comand'] + str(fu_set)
+    commands = [channel_command, baud_rate_command, power_command,
+                fu_command]
+
     stdscr.clear()
-    stdscr.addstr(5, 5, str(channel_set))
-    stdscr.addstr(6, 5, str(baud_rate_set))
-    stdscr.addstr(7, 5, str(power_set))
-    stdscr.addstr(8, 5, str(fu_set))
+    stdscr.addstr(5, 5, str(commands))
     stdscr.refresh()
     stdscr.getch()
 
