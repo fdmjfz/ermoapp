@@ -10,7 +10,7 @@ import os
 TXT_PATH = os.path.join('data', 'hc12_messages.txt')
 serial_port = '/dev/ttyS0'
 baud_rate = 9600
-timeout = 10
+timeout = 1
 set_pin = 12
 device_type = 'u'
 device_id = os.getenv('LOGIN')
@@ -103,7 +103,7 @@ def transmit(string):
 
 def configure(status=False):
     GPIO.output(set_pin, 0)
-    time.sleep(1)
+    time.sleep(2)
 
     serial.write(bytes('AT', encoding='utf-8'))
     response = serial.read_until()
