@@ -103,13 +103,12 @@ def transmit(string):
 
 def configure(status=False):
     GPIO.output(set_pin, 0)
-    time.sleep(2)
+    time.sleep(1.2)
 
     serial.write(bytes('AT', encoding='utf-8'))
     response = serial.read_until()
     response = response.decode('utf-8')
     response = response.replace('\r\n', '')
-    time.sleep(1)
 
     if response == 'OK':
         if status:
