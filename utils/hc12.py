@@ -165,14 +165,14 @@ def hc12_main_view(stdscr):
 
         if key == KEY_DOWN:
             break
-        elif key == ord('1'):
+        elif key == ord('1'):  # QWERTY
             message = main_form.add(npyscreen.TitleText,
                                     name="Mensaxe (preme intro): ")
             main_form.edit()
             message = message.get_value()
             transmit(message)
 
-        elif key == ord('3'):
+        elif key == ord('3'):  # CONFIGURE
             stdscr.nodelay(False)
 
             hc12_config_form = npyscreen.Form(name="HC12",
