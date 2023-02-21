@@ -7,8 +7,14 @@ import time
 import os
 
 TXT_PATH = os.path.join('data', 'hc12_messages.txt')
+serial_port = '/dev/ttyS0'
+baud_rate = 9600
+timeout = 1
+set_pin = 12
+device_type = 'u'
+device_id = os.getenv('LOGIN')
 
-config_opts = {
+CONFIG_OPTS = {
     'baud_rate': {
         'command': 'AT+B',
         'opts': [
@@ -31,112 +37,105 @@ config_opts = {
     }
 }
 
+serial = serial.Serial(
+    port=serial_port,
+    baudrate=baud_rate,
+    timeout=timeout,
+)
 
-class ermo_hc12:
-    def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600,
-                 timeout=1, set_hd12_pin=12):
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(set_pin, GPIO.OUT)
+GPIO.output(set_pin, 1)
 
-        self.txt_path = TXT_PATH
 
-        self.device_id = os.getenv('LOGNAME')
-        self.device_type = 'u'
-        self.set_pin = set_hd12_pin
+def receive():
+    x = serial.read_until(bytes('>', encoding='utf-8'))
 
-        self.serial = serial.Serial(
-            port=serial_port,
-            baudrate=baud_rate,
-            timeout=timeout,
-        )
+    if len(x) > 0:
+        message = x.decode('utf-8')
+        message = message.replace('>', '')
 
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self.set_pin, GPIO.OUT)
-        GPIO.output(self.set_pin, 1)
+        items_list = message.split('~')
 
-    def receive(self):
-        x = self.serial.read_until(bytes('>', encoding='utf-8'))
+        device_info = items_list[0]
+        device_type = device_info[0]
+        device_id = device_info[1:]
 
-        if len(x) > 0:
-            message = x.decode('utf-8')
-            message = message.replace('>', '')
+        text = items_list[1]
 
-            items_list = message.split('~')
-
-            device_info = items_list[0]
-            device_type = device_info[0]
-            device_id = device_info[1:]
-
-            text = items_list[1]
-
-            if device_type == 'u':
-                output = f'{device_id}: {text}'
-                ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                output = ts + '@' + output
-
-                with open(self.txt_path, 'r+') as fileout:
-                    content = fileout.read()
-                    fileout.seek(0, 0)
-                    fileout.write(output.rstrip('\r\n') + '\n' + content)
-
-                return output
-
-    def receive_continuously(self):
-        while True:
-            self.receive()
-
-    def transmit(self, string):
-        if string:
-            message = f'{self.device_type}{self.device_id}~' + string
-            message = message + '>'
-            self.serial.write(bytes(message, encoding='utf-8'))
-
-            output = f'{self.device_id}: {string}'
+        if device_type == 'u':
+            output = f'{device_id}: {text}'
             ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             output = ts + '@' + output
 
-            with open(self.txt_path, 'r+') as fileout:
+            with open(TXT_PATH, 'r+') as fileout:
                 content = fileout.read()
                 fileout.seek(0, 0)
                 fileout.write(output.rstrip('\r\n') + '\n' + content)
 
-    def configure(self, status=False):
-        GPIO.output(self.set_pin, 0)
-        time.sleep(1)
-
-        self.serial.write(bytes('AT', encoding='utf-8'))
-        response = self.serial.read_until()
-        response = response.decode('utf-8')
-        response = response.replace('\r\n', '')
-        time.sleep(0.5)
-
-        if response == 'OK':
-            if status:
-                params = ['baud_rate', 'channel', 'power',
-                          'mode']
-                report = {}
-                self.serial.write(bytes('AT+RX', encoding='utf-8'))
-
-                for param in params:
-                    value = self.serial.read_until().decode('utf-8')
-                    value = value.replace('\r\n', '')
-                    report[param] = value
-
-                report['baud_rate'] = int(
-                    report['baud_rate'].replace('OK+B', ''))
-                report['channel'] = int(report['channel'].replace('OK+RC', ''))
-                report['power'] = report['power'].replace('OK+RP:', '')
-                report['mode'] = int(report['mode'].replace('OK+FU', ''))
-
-                GPIO.output(self.set_pin, 1)
-                return report
-            else:
-                GPIO.output(self.set_pin, 1)
-                return
-
-        GPIO.output(self.set_pin, 1)
-        time.sleep(1)
+            return output
 
 
-def hc12_main_view(stdscr, hc12_class):
+def receive_continuously():
+    while True:
+        receive()
+
+
+def transmit(string):
+    if string:
+        message = f'{device_type}{device_id}~' + string
+        message = message + '>'
+        serial.write(bytes(message, encoding='utf-8'))
+
+        output = f'{device_id}: {string}'
+        ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        output = ts + '@' + output
+
+        with open(TXT_PATH, 'r+') as fileout:
+            content = fileout.read()
+            fileout.seek(0, 0)
+            fileout.write(output.rstrip('\r\n') + '\n' + content)
+
+
+def configure(status=False):
+    GPIO.output(set_pin, 0)
+    time.sleep(1)
+
+    serial.write(bytes('AT', encoding='utf-8'))
+    response = serial.read_until()
+    response = response.decode('utf-8')
+    response = response.replace('\r\n', '')
+    time.sleep(0.5)
+
+    if response == 'OK':
+        if status:
+            params = ['baud_rate', 'channel', 'power',
+                      'mode']
+            report = {}
+            serial.write(bytes('AT+RX', encoding='utf-8'))
+
+            for param in params:
+                value = serial.read_until().decode('utf-8')
+                value = value.replace('\r\n', '')
+                report[param] = value
+
+            report['baud_rate'] = int(
+                report['baud_rate'].replace('OK+B', ''))
+            report['channel'] = int(report['channel'].replace('OK+RC', ''))
+            report['power'] = report['power'].replace('OK+RP:', '')
+            report['mode'] = int(report['mode'].replace('OK+FU', ''))
+
+            GPIO.output(set_pin, 1)
+            return report
+        else:
+            GPIO.output(set_pin, 1)
+            return
+
+    GPIO.output(set_pin, 1)
+    time.sleep(1)
+
+
+def hc12_main_view(stdscr):
     if not os.path.exists(TXT_PATH):
         open(TXT_PATH, 'w')
 
@@ -168,13 +167,13 @@ def hc12_main_view(stdscr, hc12_class):
                                     name="Mensaxe (preme intro): ")
             main_form.edit()
             message = message.get_value()
-            break
-        elif key == ord('3'):
-            report = hc12_class.configure(True)
+            transmit(message)
 
+        elif key == ord('3'):
             hc12_config_form = npyscreen.Form(name="HC12",
                                               _contained_widget_height=5)
 
+            report = configure(status=True)
             hc12_config_form.add(npyscreen.TitleSlider, name="Canle Nº: ",
                                  label=True, lowest=1, step=1,
                                  out_of=100, value=report['channel'])
@@ -182,27 +181,27 @@ def hc12_main_view(stdscr, hc12_class):
             hc12_config_form.add(npyscreen.TitleSelectOne,
                                  name='Baud Rate', rely=5, max_height=5,
                                  scroll_exit=True,
-                                 values=config_opts['baud_rate']['opts'],
-                                 value=[config_opts['baud_rate']['opts'].index(
+                                 values=CONFIG_OPTS['baud_rate']['opts'],
+                                 value=[CONFIG_OPTS['baud_rate']['opts'].index(
                                      report['baud_rate'])],
                                  )
 
             hc12_config_form.add(npyscreen.TitleSelectOne, name='Potencia',
                                  max_height=8, scroll_exit=True,
                                  values=[
-                                     i for i in config_opts['power']['opts'].keys()],
-                                 value=[config_opts['power']
+                                     i for i in CONFIG_OPTS['power']['opts'].keys()],
+                                 value=[CONFIG_OPTS['power']
                                         ['opts'][report['power']] - 1],
                                  )
 
             hc12_config_form.add(npyscreen.TitleSelectOne, name='FU',
                                  max_height=3, scroll_exit=True,
-                                 values=config_opts['mode']['opts'],
-                                 value=[config_opts['mode']
+                                 values=CONFIG_OPTS['mode']['opts'],
+                                 value=[CONFIG_OPTS['mode']
                                         ['opts'].index(report['mode'])]
                                  )
 
             hc12_config_form.edit()
 
     stdscr.nodelay(False)
-    return message
+    return
