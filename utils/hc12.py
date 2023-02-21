@@ -170,6 +170,8 @@ def hc12_main_view(stdscr):
             transmit(message)
 
         elif key == ord('3'):
+            stdscr.nodelay(False)
+
             hc12_config_form = npyscreen.Form(name="HC12",
                                               _contained_widget_height=5)
 
@@ -202,6 +204,7 @@ def hc12_main_view(stdscr):
                                  )
 
             hc12_config_form.edit()
+            stdscr.nodelay(True)
 
     stdscr.nodelay(False)
     return
