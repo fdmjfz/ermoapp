@@ -188,33 +188,55 @@ def hc12_main_view(stdscr):
             hc12_config_form = npyscreen.Form(name="HC12")
 
             report = configure()
-            channel = main_form.add(npyscreen.TitleSlider, name="Canle Nº: ", label=True,
-                                    lowest=1, step=1, out_of=100, value=report['channel'])
+            channel = hc12_config_form.add(npyscreen.TitleSlider, name="Canle Nº: ", label=True,
+                                           lowest=1, step=1, out_of=100, value=report['channel'])
 
-            baud_rate = main_form.add(npyscreen.TitleSelectOne, name='Baud Rate',
-                                      rely=5, max_height=5, scroll_exit=True,
-                                      values=CONFIG_OPTS['baud_rate']['opts'],
-                                      value=[CONFIG_OPTS['baud_rate']['opts'].index(
-                                          report['baud_rate'])],
+            baud_rate = hc12_config_form.add(npyscreen.TitleSelectOne, name='Baud Rate',
+                                             rely=5, max_height=5, scroll_exit=True,
+                                             values=CONFIG_OPTS['baud_rate']['opts'],
+                                             value=[CONFIG_OPTS['baud_rate']['opts'].index(
+                                                 report['baud_rate'])],
+                                             )
+
+            power = hc12_config_form.add(npyscreen.TitleSelectOne, name='Potencia',
+                                         max_height=8, scroll_exit=True,
+                                         values=[i for i in CONFIG_OPTS['power']
+                                                 ['opts'].keys()],
+                                         value=[CONFIG_OPTS['power']
+                                                ['opts'][report['power']] - 1],
+                                         )
+
+            fu = hc12_config_form.add(npyscreen.TitleSelectOne, name='FU',
+                                      max_height=3, scroll_exit=True,
+                                      values=CONFIG_OPTS['mode']['opts'],
+                                      value=[CONFIG_OPTS['mode']
+                                             ['opts'].index(report['mode'])]
                                       )
-
-            power = main_form.add(npyscreen.TitleSelectOne, name='Potencia',
-                                  max_height=8, scroll_exit=True,
-                                  values=[i for i in CONFIG_OPTS['power']
-                                          ['opts'].keys()],
-                                  value=[CONFIG_OPTS['power']
-                                         ['opts'][report['power']] - 1],
-                                  )
-
-            fu = main_form.add(npyscreen.TitleSelectOne, name='FU',
-                               max_height=3, scroll_exit=True,
-                               values=CONFIG_OPTS['mode']['opts'],
-                               value=[CONFIG_OPTS['mode']
-                                      ['opts'].index(report['mode'])]
-                               )
 
             # PREPROCESAMIENTO PARA OBTENER LISTA DE COMANDOS AL HC12
             hc12_config_form.edit()
+
+            channel_set = int(channel.get_value())
+            baud_rate_set = CONFIG_OPTS['baud_rate']['opts'][baud_rate.get_value()[
+                0]]
+            power_set = power.get_values()[power.get_value()[0]]
+            power_set = CONFIG_OPTS['power']['opts'][power_set]
+            fu_set = CONFIG_OPTS['mode']['opts'][fu.get_value()[0]]
+
+            channel_set = str(channel_set)
+            while len(channel_set) < 3:
+                channel_set = '0' + channel_set
+            channel_command = CONFIG_OPTS['channel']['command'] + channel_set
+            baud_rate_command = CONFIG_OPTS['baud_rate']['command'] + \
+                str(baud_rate_set)
+            power_command = CONFIG_OPTS['power']['command'] + str(power_set)
+            fu_command = CONFIG_OPTS['mode']['command'] + str(fu_set)
+
+            command_list = [channel_command, baud_rate_command, power_command,
+                            fu_command]
+
+            # ENVIO DE COMANDOS AL HC12
+            configure(command_list=command_list)
 
             stdscr.nodelay(True)
 
