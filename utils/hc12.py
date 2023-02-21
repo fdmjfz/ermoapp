@@ -114,17 +114,6 @@ def configure(status=False):
             report = {}
             serial.write(bytes('AT+RX', encoding='utf-8'))
 
-            for param in params:
-                value = serial.read_until().decode('utf-8')
-                value = value.replace('\r\n', '')
-                report[param] = value
-
-            report['baud_rate'] = int(
-                report['baud_rate'].replace('OK+B', ''))
-            report['channel'] = int(report['channel'].replace('OK+RC', ''))
-            report['power'] = report['power'].replace('OK+RP:', '')
-            report['mode'] = int(report['mode'].replace('OK+FU', ''))
-
             GPIO.output(set_pin, 1)
             return report
         else:
