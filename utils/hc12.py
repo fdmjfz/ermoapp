@@ -106,7 +106,6 @@ def transmit(string):
 
 def configure(command_list=None):
     GPIO.output(set_pin, 0)
-    serial.baudrate = 9600
     time.sleep(2)
 
     serial.write(bytes('AT', encoding='utf-8'))
@@ -133,7 +132,6 @@ def configure(command_list=None):
             report['mode'] = int(report['mode'].replace('OK+FU', ''))
 
             GPIO.output(set_pin, 1)
-            serial.baudrate = baud_rate
             return report
         else:
             for command in command_list:
@@ -145,7 +143,6 @@ def configure(command_list=None):
                     9/0
 
             GPIO.output(set_pin, 1)
-            serial.baudrate = baud_rate
             return
 
     GPIO.output(set_pin, 1)
