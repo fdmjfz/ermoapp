@@ -128,11 +128,13 @@ class ermo_hc12:
                 hc12_config_form = npyscreen.Form(name="HC12",
                                                   _contained_widget_height=5)
 
-                hc12_config_form.add(npyscreen.TitleSlider, name="Canle Nº: ", label=True,
-                                     lowest=1, step=1, out_of=100, value=report['channel'])
+                hc12_config_form.add(npyscreen.TitleSlider, name="Canle Nº: ",
+                                     label=True, lowest=1, step=1,
+                                     out_of=100, value=report['channel'])
 
-                hc12_config_form.add(npyscreen.TitleSelectOne, name='Baud Rate',
-                                     rely=5, max_height=5, scroll_exit=True,
+                hc12_config_form.add(npyscreen.TitleSelectOne,
+                                     name='Baud Rate', rely=5, max_height=5,
+                                     scroll_exit=True,
                                      values=self.config_opts['baud_rate']['opts'],
                                      value=[self.config_opts['baud_rate']['opts'].index(
                                          report['baud_rate'])],
@@ -165,7 +167,7 @@ class ermo_hc12:
         time.sleep(1)
 
 
-def hc12_main_view(stdscr):
+def hc12_main_view(stdscr, hc12_class):
     if not os.path.exists(TXT_PATH):
         open(TXT_PATH, 'w')
 
@@ -198,6 +200,8 @@ def hc12_main_view(stdscr):
             main_form.edit()
             message = message.get_value()
             break
+        elif key == ord('3'):
+            hc12_class.configure(True)
 
     stdscr.nodelay(False)
     return message
