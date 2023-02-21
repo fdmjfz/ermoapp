@@ -20,10 +20,9 @@ TITLE_COLOR = curses.color_pair(3)
 SECONDARY_COLOR = curses.color_pair(4)
 SECONDARY_COLOR_R = curses.color_pair(5)
 
-ermohc12 = hc12.ermo_hc12(timeout=10)
 
 # Background threading
-bg_task = threading.Thread(target=ermohc12.receive_continuously, daemon=True,
+bg_task = threading.Thread(target=hc12.receive_continuously, daemon=True,
                            name='Autoupdate HC12')
 bg_task.start()
 
