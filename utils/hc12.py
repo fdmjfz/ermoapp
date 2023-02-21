@@ -8,6 +8,29 @@ import os
 
 TXT_PATH = os.path.join('data', 'hc12_messages.txt')
 
+config_opts = {
+    'baud_rate': {
+        'command': 'AT+B',
+        'opts': [
+            1200, 2400, 4800,
+            9600, 19200, 38400,
+            57600, 115200
+        ]
+    },
+    'power': {
+        'command': 'AT+P',
+        'opts': {
+            '-1dBm': 1, '+2dBm': 2, '+5dBm': 3,
+            '+8dBm': 4, '+11dBm': 5, '+14dBm': 6,
+            '+17dBm': 7, '+20dBm': 8
+        }
+    },
+    'mode': {
+        'comand': 'AT+FU',
+        'opts': [1, 2, 3]
+    }
+}
+
 
 class ermo_hc12:
     def __init__(self, serial_port='/dev/ttyS0', baud_rate=9600,
@@ -24,28 +47,6 @@ class ermo_hc12:
             baudrate=baud_rate,
             timeout=timeout,
         )
-        self.config_opts = {
-            'baud_rate': {
-                'command': 'AT+B',
-                'opts': [
-                    1200, 2400, 4800,
-                    9600, 19200, 38400,
-                    57600, 115200
-                ]
-            },
-            'power': {
-                'command': 'AT+P',
-                'opts': {
-                    '-1dBm': 1, '+2dBm': 2, '+5dBm': 3,
-                    '+8dBm': 4, '+11dBm': 5, '+14dBm': 6,
-                    '+17dBm': 7, '+20dBm': 8
-                }
-            },
-            'mode': {
-                'comand': 'AT+FU',
-                'opts': [1, 2, 3]
-            }
-        }
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.set_pin, GPIO.OUT)
@@ -125,38 +126,6 @@ class ermo_hc12:
                 report['power'] = report['power'].replace('OK+RP:', '')
                 report['mode'] = int(report['mode'].replace('OK+FU', ''))
 
-                hc12_config_form = npyscreen.Form(name="HC12",
-                                                  _contained_widget_height=5)
-
-                hc12_config_form.add(npyscreen.TitleSlider, name="Canle Nº: ",
-                                     label=True, lowest=1, step=1,
-                                     out_of=100, value=report['channel'])
-
-                hc12_config_form.add(npyscreen.TitleSelectOne,
-                                     name='Baud Rate', rely=5, max_height=5,
-                                     scroll_exit=True,
-                                     values=self.config_opts['baud_rate']['opts'],
-                                     value=[self.config_opts['baud_rate']['opts'].index(
-                                         report['baud_rate'])],
-                                     )
-
-                hc12_config_form.add(npyscreen.TitleSelectOne, name='Potencia',
-                                     max_height=8, scroll_exit=True,
-                                     values=[
-                                         i for i in self.config_opts['power']['opts'].keys()],
-                                     value=[self.config_opts['power']
-                                            ['opts'][report['power']] - 1],
-                                     )
-
-                hc12_config_form.add(npyscreen.TitleSelectOne, name='FU',
-                                     max_height=3, scroll_exit=True,
-                                     values=self.config_opts['mode']['opts'],
-                                     value=[self.config_opts['mode']
-                                            ['opts'].index(report['mode'])]
-                                     )
-
-                hc12_config_form.edit()
-
                 GPIO.output(self.set_pin, 1)
                 return report
             else:
@@ -201,7 +170,39 @@ def hc12_main_view(stdscr, hc12_class):
             message = message.get_value()
             break
         elif key == ord('3'):
-            hc12_class.configure(True)
+            report = hc12_class.configure(True)
+
+            hc12_config_form = npyscreen.Form(name="HC12",
+                                              _contained_widget_height=5)
+
+            hc12_config_form.add(npyscreen.TitleSlider, name="Canle Nº: ",
+                                 label=True, lowest=1, step=1,
+                                 out_of=100, value=report['channel'])
+
+            hc12_config_form.add(npyscreen.TitleSelectOne,
+                                 name='Baud Rate', rely=5, max_height=5,
+                                 scroll_exit=True,
+                                 values=config_opts['baud_rate']['opts'],
+                                 value=[config_opts['baud_rate']['opts'].index(
+                                     report['baud_rate'])],
+                                 )
+
+            hc12_config_form.add(npyscreen.TitleSelectOne, name='Potencia',
+                                 max_height=8, scroll_exit=True,
+                                 values=[
+                                     i for i in config_opts['power']['opts'].keys()],
+                                 value=[config_opts['power']
+                                        ['opts'][report['power']] - 1],
+                                 )
+
+            hc12_config_form.add(npyscreen.TitleSelectOne, name='FU',
+                                 max_height=3, scroll_exit=True,
+                                 values=config_opts['mode']['opts'],
+                                 value=[config_opts['mode']
+                                        ['opts'].index(report['mode'])]
+                                 )
+
+            hc12_config_form.edit()
 
     stdscr.nodelay(False)
     return message
