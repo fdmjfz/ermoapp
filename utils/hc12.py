@@ -75,7 +75,7 @@ class ermo_hc12:
                 fileout.seek(0, 0)
                 fileout.write(output.rstrip('\r\n') + '\n' + content)
 
-    def configure(self):
+    def configure(self, status=False):
         GPIO.output(self.set_pin, 0)
         time.sleep(1)
 
@@ -85,8 +85,16 @@ class ermo_hc12:
         response = response.replace('\r\n', '')
 
         if response != 'OK':
-            GPIO.output(self.set_pin, 1)
-            return
+            if status:
+                self.serial.write(bytes('AT+RX', encoding='utf-8'))
+
+                report = [self.serial.read_until().decode('utf-8')
+                          for i in range(0, 4)]
+
+                return report
+            else:
+                GPIO.output(self.set_pin, 1)
+                return
 
         GPIO.output(self.set_pin, 1)
         time.sleep(1)
