@@ -9,7 +9,7 @@ import os
 
 TXT_PATH = os.path.join('data', 'hc12_messages.txt')
 serial_port = '/dev/ttyS0'
-baud_rate = 9600
+baud_rate = 1200
 timeout = 1
 set_pin = 12
 device_type = 'u'
