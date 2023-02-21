@@ -186,15 +186,22 @@ def hc12_main_view(stdscr):
             hc12_config_form = npyscreen.Form(name="HC12")
 
             report = configure()
-            channel = hc12_config_form.add(npyscreen.TitleSlider, name="Canle Nº: ", label=True,
-                                           lowest=1, step=1, out_of=100, value=report['channel'])
+            channel = hc12_config_form.add(npyscreen.TitleSlider,
+                                           name="Canle Nº: ", label=True,
+                                           lowest=1, step=1, out_of=100,
+                                           value=report['channel'])
 
-            power = hc12_config_form.add(npyscreen.TitleSelectOne, name='Potencia',
-                                         max_height=8, scroll_exit=True,
-                                         values=[i for i in CONFIG_OPTS['power']
-                                                 ['opts'].keys()],
-                                         value=[CONFIG_OPTS['power']
-                                                ['opts'][report['power']] - 1],
+            power = hc12_config_form.add(npyscreen.TitleSelectOne,
+                                         name='Potencia', max_height=8,
+                                         scroll_exit=True,
+                                         values=[
+                                             i for i in CONFIG_OPTS[
+                                                 'power']['opts'].keys()
+                                         ],
+                                         value=[
+                                             CONFIG_OPTS['power']
+                                             ['opts'][report['power']] - 1
+                                         ],
                                          )
 
             # PREPROCESAMIENTO PARA OBTENER LISTA DE COMANDOS AL HC12
