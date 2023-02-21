@@ -33,8 +33,11 @@ CONFIG_OPTS = {
         }
     },
     'mode': {
-        'comand': 'AT+FU',
+        'command': 'AT+FU',
         'opts': [1, 2, 3]
+    },
+    'channel': {
+        'command': 'AT+C'
     }
 }
 
@@ -228,7 +231,7 @@ def hc12_main_view(stdscr):
             baud_rate_command = CONFIG_OPTS['baud_rate']['command'] + \
                 str(baud_rate_set)
             power_command = CONFIG_OPTS['power']['command'] + str(power_set)
-            fu_command = CONFIG_OPTS['mode']['comand'] + str(fu_set)
+            fu_command = CONFIG_OPTS['mode']['command'] + str(fu_set)
 
             command_list = [channel_command, baud_rate_command, power_command,
                             fu_command]
