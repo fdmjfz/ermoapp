@@ -28,7 +28,7 @@ CONFIG_OPTS = {
         'command': 'AT+P',
         'opts': {
             '-01dBm': 1, '+02dBm': 2, '+05dBm': 3,
-            '+8dBm': 4, '+11dBm': 5, '+14dBm': 6,
+            '+08dBm': 4, '+11dBm': 5, '+14dBm': 6,
             '+17dBm': 7, '+20dBm': 8
         }
     },
