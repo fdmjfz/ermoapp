@@ -13,7 +13,7 @@ baud_rate = 9600
 timeout = 1
 set_pin = 12
 device_type = 'u'
-device_id = os.getenv('LOGIN')
+device_id = os.getenv('USER')
 
 CONFIG_OPTS = {
     'baud_rate': {
