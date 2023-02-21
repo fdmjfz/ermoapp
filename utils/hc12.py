@@ -85,7 +85,7 @@ class ermo_hc12:
         response = response.replace('\r\n', '')
         time.sleep(0.5)
 
-        if response != 'OK':
+        if response == 'OK':
             if status:
                 self.serial.write(bytes('AT+RX', encoding='utf-8'))
 
