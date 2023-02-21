@@ -186,7 +186,7 @@ def hc12_main_view(stdscr):
             hc12_config_form = npyscreen.Form(name="HC12",
                                               _contained_widget_height=5)
 
-            report = configure(status=True)
+            report = configure()
             channel = main_form.add(npyscreen.TitleSlider, name="Canle Nº: ", label=True,
                                     lowest=1, step=1, out_of=100, value=report['channel'])
 
