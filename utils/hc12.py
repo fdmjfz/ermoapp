@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 import time
 import os
 
+
 TXT_PATH = os.path.join('data', 'hc12_messages.txt')
 serial_port = '/dev/ttyS0'
 baud_rate = 9600
@@ -78,7 +79,10 @@ def receive():
 
 def receive_continuously():
     while True:
-        receive()
+        if GPIO.input(set_pin):
+            receive()
+        else:
+            time.sleep(1)
 
 
 def transmit(string):
