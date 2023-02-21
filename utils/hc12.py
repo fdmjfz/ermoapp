@@ -9,7 +9,7 @@ import os
 TXT_PATH = os.path.join('data', 'hc12_messages.txt')
 serial_port = '/dev/ttyS0'
 baud_rate = 9600
-timeout = 1
+timeout = 10
 set_pin = 12
 device_type = 'u'
 device_id = os.getenv('LOGIN')
@@ -105,7 +105,7 @@ def configure(status=False):
     response = serial.read_until()
     response = response.decode('utf-8')
     response = response.replace('\r\n', '')
-    time.sleep(0.5)
+    time.sleep(1)
 
     if response == 'OK':
         if status:
@@ -113,6 +113,17 @@ def configure(status=False):
                       'mode']
             report = {}
             serial.write(bytes('AT+RX', encoding='utf-8'))
+
+            for param in params:
+                value = serial.read_until().decode('utf-8')
+                value = value.replace('\r\n', '')
+                report[param] = value
+
+            report['baud_rate'] = int(
+                report['baud_rate'].replace('OK+B', ''))
+            report['channel'] = int(report['channel'].replace('OK+RC', ''))
+            report['power'] = report['power'].replace('OK+RP:', '')
+            report['mode'] = int(report['mode'].replace('OK+FU', ''))
 
             GPIO.output(set_pin, 1)
             return report
