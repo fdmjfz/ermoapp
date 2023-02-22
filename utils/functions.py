@@ -45,14 +45,15 @@ class ermo_fun:
 
     def intro_animate(self):
         self.stdscr.clear()
+        self.stdscr.box()
 
         for i in range(0, len(self.intro)):
             string = self.intro[:i]
             self.stdscr.addstr(0, 0, string)
-            self.stdscr.box()
-            self.stdscr.refresh()
 
             curses.napms(50)
+
+        self.stdscr.refresh()
 
         self.stdscr.getch()
         self.stdscr.clear()
