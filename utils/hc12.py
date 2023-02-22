@@ -121,11 +121,12 @@ def configure(command_list=None):
         else:
             for command in command_list:
                 serial.write(bytes(command, encoding='utf-8'))
-                time.sleep(0.1)
                 response = serial.read_until().decode('utf-8')
                 response = response.replace('\r\n', '')
                 if response != command.replace('AT', 'OK'):
-                    9/0
+                    message = f'O comando {command} non tivo éxito.'
+                    npyscreen.notify_wait(message=message, title='Erro',
+                                          form_color='WARNING')
 
             GPIO.output(set_pin, 1)
             return

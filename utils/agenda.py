@@ -75,9 +75,9 @@ class agenda(npyscreen.NPSApp):
             path = self.existent_file.value
             name = path.rsplit('/')
             name = name[-1]
-
             with open(path, 'r') as filein:
                 text = filein.read()
+
         except AttributeError:
             message = "Non seleccionaches arquivo."
             npyscreen.notify_wait(message=message, title='Erro',
