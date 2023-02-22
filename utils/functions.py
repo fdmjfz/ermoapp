@@ -46,14 +46,16 @@ class ermo_fun:
     def intro_animate(self):
         self.stdscr.clear()
         self.stdscr.box()
+
         for i in range(0, len(self.intro)):
             string = self.intro[:i]
-            self.stdscr.addstr(1, 1, string)
+            self.stdscr.addstr(0, 0, string)
             self.stdscr.refresh()
 
             curses.napms(50)
 
         self.stdscr.getch()
+        self.stdscr.clear()
 
     def update_index(self, menu_list, key,
                      index, horizontal=True):
