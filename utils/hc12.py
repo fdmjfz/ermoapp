@@ -19,8 +19,8 @@ CONFIG_OPTS = {
     'power': {
         'command': 'AT+P',
         'opts': {
-            '-1dBm': 1, '+2dBm': 2, '+5dBm': 3,
-            '+8dBm': 4, '+11dBm': 5, '+14dBm': 6,
+            '-01dBm': 1, '+02dBm': 2, '+05dBm': 3,
+            '+08dBm': 4, '+11dBm': 5, '+14dBm': 6,
             '+17dBm': 7, '+20dBm': 8
         }
     },
