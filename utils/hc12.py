@@ -193,7 +193,7 @@ def hc12_main_view(stdscr):
                                            value=report['channel'])
 
             power = hc12_config_form.add(npyscreen.TitleSelectOne,
-                                         name='Potencia', max_height=8,
+                                         name='Potencia', max_height=8, rely=6,
                                          scroll_exit=True,
                                          values=[
                                              i for i in CONFIG_OPTS[
