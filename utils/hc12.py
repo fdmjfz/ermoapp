@@ -43,7 +43,7 @@ GPIO.output(set_pin, 1)
 
 def receive():
     x = serial.read_until(bytes('>', encoding='utf-8'))
-
+    return x
     if len(x) > 0:
         message = x.decode('utf-8')
         message = message.replace('>', '')
