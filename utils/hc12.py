@@ -149,7 +149,9 @@ def configure(command_list=None):
     time.sleep(1)
 
 
-def hc12_main_view(stdscr, objc):
+def hc12_main_view(objc):
+
+    stdscr = objc.stdscr
     if not os.path.exists(TXT_PATH):
         open(TXT_PATH, 'w')
 
@@ -185,7 +187,8 @@ def hc12_main_view(stdscr, objc):
             transmit(message)
 
         elif key == ord('2'):
-            objc.sms_keyboard()
+            message = objc.sms_keyboard(0.5)
+            transmit(message)
 
         elif key == ord('3'):  # CONFIGURE
             stdscr.nodelay(False)
