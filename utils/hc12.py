@@ -43,13 +43,16 @@ GPIO.output(set_pin, 1)
 
 def receive():
     x = serial.read_until(bytes('>', encoding='utf-8'))
-    return x
-    if len(x) > 0:
-        try:
-            message = x.decode('utf-8')
-        except UnicodeDecodeError:
-            return
 
+    try:
+        message = x.decode('utf-8')
+    except UnicodeDecodeError:
+        return
+
+    if len(message.rstrip('\x00')) == 0:
+        return
+
+    if len(x) > 0:
         message = message.replace('>', '')
 
         items_list = message.split('~')
