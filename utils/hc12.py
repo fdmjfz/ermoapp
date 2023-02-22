@@ -177,7 +177,7 @@ def hc12_main_view(stdscr):
         elif key == ord('1'):  # QWERTY
             qwerty_form = npyscreen.Form(name='QWERTY input')
             message = qwerty_form.add(npyscreen.TitleText,
-                                      name="Mensaxe (preme intro): ")
+                                      name="Mensaxe: ")
             qwerty_form.edit()
             message = message.get_value()
             transmit(message)
