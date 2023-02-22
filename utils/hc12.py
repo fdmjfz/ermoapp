@@ -45,7 +45,11 @@ def receive():
     x = serial.read_until(bytes('>', encoding='utf-8'))
     return x
     if len(x) > 0:
-        message = x.decode('utf-8')
+        try:
+            message = x.decode('utf-8')
+        except UnicodeDecodeError:
+            return
+
         message = message.replace('>', '')
 
         items_list = message.split('~')
@@ -99,7 +103,11 @@ def configure(command_list=None):
 
     serial.write(bytes('AT', encoding='utf-8'))
     response = serial.read_until()
-    response = response.decode('utf-8')
+    try:
+        response = response.decode('utf-8')
+    except UnicodeDecodeError:
+        return
+
     response = response.replace('\r\n', '')
 
     if response == 'OK':
