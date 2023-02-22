@@ -192,7 +192,7 @@ def hc12_main_view(stdscr):
                                              ['opts'][report['power']] - 1
                                          ],
                                          )
-            sleep = main_form.add(npyscreen.Button, name='Apagar')
+            sleep = hc12_config_form.add(npyscreen.Button, name='Apagar')
 
             # PREPROCESAMIENTO PARA OBTENER LISTA DE COMANDOS AL HC12
             hc12_config_form.edit()
