@@ -22,6 +22,16 @@ class ermo_fun:
             "jkl", "mno", "pqrs",
             "tuv", "wxyz"
         ]
+        self.intro = """
+        Benvido á APP do Ermo!
+
+        Dende o noso refuxio dámoslle parabéns por obter un dispositivo PipBoy.
+        Lembre de andarse con ollo e de agardar por instruccións.
+
+        Sorte no Ermo!
+
+        Prema calquer boton pra continuar.
+        """
 
         self.stdscr = stdscr
         self.title_color = title_color
@@ -32,6 +42,17 @@ class ermo_fun:
         self.h, self.w = stdscr.getmaxyx()
 
         self.stdscr.bkgd(' ', main_color)
+
+    def intro_animate(self):
+        self.stdscr.clear()
+        for i in range(0, len(self.intro)):
+            string = self.intro[:i]
+            self.stdscr.addstr(0, 0, string)
+            self.stdscr.refresh()
+
+            curses.napms(50)
+
+        self.stdscr.getch()
 
     def update_index(self, menu_list, key,
                      index, horizontal=True):

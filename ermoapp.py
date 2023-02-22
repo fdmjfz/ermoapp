@@ -1,7 +1,7 @@
 import curses
 import threading
 
-from utils import functions, agenda, hc12
+from utils import functions, agenda, hc12, animate
 
 
 curses.initscr()
@@ -32,6 +32,8 @@ def main(stdscr):
     ermo = functions.ermo_fun(stdscr, TITLE_COLOR, MAIN_COLOR,
                               MAIN_COLOR_R, SECONDARY_COLOR,
                               SECONDARY_COLOR_R)
+    ermo.stdscr.box()
+    animate.animate(ermo.stdscr)
 
     while True:
         # Inicializacion menu
