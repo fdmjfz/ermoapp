@@ -6,6 +6,8 @@ import RPi.GPIO as GPIO
 import time
 import os
 
+from utils import functions
+
 
 TXT_PATH = os.path.join('data', 'hc12_messages.txt')
 serial_port = '/dev/ttyS0'
@@ -147,7 +149,7 @@ def configure(command_list=None):
     time.sleep(1)
 
 
-def hc12_main_view(stdscr):
+def hc12_main_view(stdscr, objc):
     if not os.path.exists(TXT_PATH):
         open(TXT_PATH, 'w')
 
@@ -181,6 +183,9 @@ def hc12_main_view(stdscr):
             qwerty_form.edit()
             message = message.get_value()
             transmit(message)
+
+        elif key == ord('2'):
+            objc.sms_keyboard()
 
         elif key == ord('3'):  # CONFIGURE
             stdscr.nodelay(False)
