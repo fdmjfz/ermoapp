@@ -16,29 +16,18 @@ device_type = 'u'
 device_id = os.getenv('USER')
 
 CONFIG_OPTS = {
-    'baud_rate': {
-        'command': 'AT+B',
-        'opts': [
-            1200, 2400, 4800,
-            9600, 19200, 38400,
-            57600, 115200
-        ]
-    },
     'power': {
         'command': 'AT+P',
         'opts': {
-            '-01dBm': 1, '+02dBm': 2, '+05dBm': 3,
-            '+08dBm': 4, '+11dBm': 5, '+14dBm': 6,
+            '-1dBm': 1, '+2dBm': 2, '+5dBm': 3,
+            '+8dBm': 4, '+11dBm': 5, '+14dBm': 6,
             '+17dBm': 7, '+20dBm': 8
         }
     },
-    'mode': {
-        'command': 'AT+FU',
-        'opts': [1, 2, 3]
-    },
     'channel': {
         'command': 'AT+C'
-    }
+    },
+    'sleep': 'AT+SLEEP'
 }
 
 serial = serial.Serial(
@@ -115,12 +104,11 @@ def configure(command_list=None):
 
     if response == 'OK':
         if not command_list:
-            params = ['baud_rate', 'channel', 'power',
-                      'mode']
+            params = {'channel': 'AT+RC', 'power': 'AT+RP'}
             report = {}
-            serial.write(bytes('AT+RX', encoding='utf-8'))
 
             for param in params:
+                serial.write(bytes(params[param], encoding='utf-8'))
                 value = serial.read_until().decode('utf-8')
                 value = value.replace('\r\n', '')
                 report[param] = value
@@ -203,6 +191,7 @@ def hc12_main_view(stdscr):
                                              ['opts'][report['power']] - 1
                                          ],
                                          )
+            sleep = main_form.add(npyscreen.Button, name='Apagar')
 
             # PREPROCESAMIENTO PARA OBTENER LISTA DE COMANDOS AL HC12
             hc12_config_form.edit()
@@ -210,6 +199,7 @@ def hc12_main_view(stdscr):
             channel_set = int(channel.get_value())
             power_set = power.get_values()[power.get_value()[0]]
             power_set = CONFIG_OPTS['power']['opts'][power_set]
+            sleep_set = sleep.value
 
             channel_set = str(channel_set)
             while len(channel_set) < 3:
@@ -218,6 +208,8 @@ def hc12_main_view(stdscr):
             power_command = CONFIG_OPTS['power']['command'] + str(power_set)
 
             command_list = [channel_command, power_command]
+            if sleep_set is True:
+                command_list.append('AT+SLEEP')
 
             # ENVIO DE COMANDOS AL HC12
             configure(command_list=command_list)

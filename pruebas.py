@@ -20,14 +20,6 @@ def configure(status=False):
 
 
 config_opts = {
-    'baud_rate': {
-        'command': 'AT+B',
-        'opts': [
-            1200, 2400, 4800,
-            9600, 19200, 38400,
-            57600, 115200
-        ]
-    },
     'power': {
         'command': 'AT+P',
         'opts': {
@@ -36,13 +28,10 @@ config_opts = {
             '+17dBm': 7, '+20dBm': 8
         }
     },
-    'mode': {
-        'comand': 'AT+FU',
-        'opts': [1, 2, 3]
-    },
     'channel': {
         'command': 'AT+C'
-    }
+    },
+    'sleep': 'AT+SLEEP'
 }
 
 
@@ -54,45 +43,34 @@ def main(stdscr):
     channel = main_form.add(npyscreen.TitleSlider, name="Canle Nº: ", label=True,
                             lowest=1, step=1, out_of=100, value=report['channel'])
 
-    baud_rate = main_form.add(npyscreen.TitleSelectOne, name='Baud Rate',
-                              rely=5, max_height=5, scroll_exit=True,
-                              values=config_opts['baud_rate']['opts'],
-                              value=[config_opts['baud_rate']['opts'].index(
-                                  report['baud_rate'])],
-                              )
-
     power = main_form.add(npyscreen.TitleSelectOne, name='Potencia',
-                          max_height=8, scroll_exit=True,
+                          max_height=8, scroll_exit=True, rely=5,
                           values=[i for i in config_opts['power']
                                   ['opts'].keys()],
                           value=[config_opts['power']
                                  ['opts'][report['power']] - 1],
+                          max_width=29,
                           )
 
-    fu = main_form.add(npyscreen.TitleSelectOne, name='FU',
-                       max_height=3, scroll_exit=True,
-                       values=config_opts['mode']['opts'],
-                       value=[config_opts['mode']
-                              ['opts'].index(report['mode'])]
-                       )
+    sleep = main_form.add(npyscreen.Button, name='Apagar')
 
     main_form.edit()
+
     channel_set = int(channel.get_value())
-    baud_rate_set = config_opts['baud_rate']['opts'][baud_rate.get_value()[0]]
     power_set = power.get_values()[power.get_value()[0]]
     power_set = config_opts['power']['opts'][power_set]
-    fu_set = config_opts['mode']['opts'][fu.get_value()[0]]
+    sleep_set = sleep.value
 
     channel_set = str(channel_set)
     while len(channel_set) < 3:
         channel_set = '0' + channel_set
     channel_command = config_opts['channel']['command'] + channel_set
-    baud_rate_command = config_opts['baud_rate']['command'] + \
-        str(baud_rate_set)
+
     power_command = config_opts['power']['command'] + str(power_set)
-    fu_command = config_opts['mode']['comand'] + str(fu_set)
-    commands = [channel_command, baud_rate_command, power_command,
-                fu_command]
+
+    commands = [channel_command, power_command]
+    if sleep_set is True:
+        commands.append('AT+SLEEP')
 
     stdscr.clear()
     stdscr.addstr(5, 5, str(commands))
