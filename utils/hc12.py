@@ -95,7 +95,7 @@ def transmit(string):
 
 def configure(command_list=None):
     GPIO.output(set_pin, 0)
-    time.sleep(2)
+    time.sleep(1.2)
 
     serial.write(bytes('AT', encoding='utf-8'))
     response = serial.read_until()
