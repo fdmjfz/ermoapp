@@ -1,5 +1,0 @@
-cero
-uno
-dos
-cuatro
-cinco

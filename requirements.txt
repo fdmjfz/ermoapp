@@ -1,0 +1,5 @@
+bme280pi
+RPi.GPIO
+pyserial
+psutil
+gpiozero
