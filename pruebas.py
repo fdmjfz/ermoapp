@@ -865,9 +865,13 @@ def display_main_window(mw):
 
 def init_screen(stdscr):
     stdscr.clear()
+    ypos = 3
+    xpos = 5
+    xwidth = maxx - xpos - 1
+
     title_win = stdscr.subpad(14, maxx, 3, 5)
     title_win.addstr(0, 0, draw)
-    subtitle_win = stdscr.subpad(14, maxx, 15, 5)
+    subtitle_win = stdscr.subpad(14, maxx, 20, 5)
     subtitle_win.addstr(0, 0, sub_draw)
     stdscr.addstr(maxy - 1, 5, "Preme calquera tecla pra iniciar.")
 
