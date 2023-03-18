@@ -871,7 +871,7 @@ def init_screen(stdscr):
 
     title_win = stdscr.subpad(14, xwidth, ypos, xpos)
     title_win.addstr(0, 0, draw)
-    subtitle_win = stdscr.subpad(14, xwidth, ypos + 20, xpos)
+    subtitle_win = stdscr.subpad(14, xwidth, ypos + 10, xpos)
     subtitle_win.addstr(0, 0, sub_draw)
     stdscr.addstr(maxy - 1, 5, "Preme calquera tecla pra iniciar.")
 
