@@ -844,7 +844,7 @@ def display_main_window(mw):
     hc12_win.addstr(0, 2, f" {gconfig['hc12']['name']} ")
     display_hc12_preview(hc12_win)
 
-    hc12_config_win = mw.subpad(5, 16, 14, 1)
+    hc12_config_win = mw.subpad(5, 16, 2, 33)
     hc12_config_win.border(*sw_border)
     hc12_config_win.addstr(0, 1, " HC12 Conf. ")
     hc12_config_win.addstr(1, 1, 'Canle: ')
