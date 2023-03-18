@@ -19,5 +19,11 @@ else
     source ./ermovenv/bin/activate
 fi
 
-python3 pruebas.py
+# Para horizontal descomenta a seguinte liña
+#python3 ermoapp_h.py
+
+# Para vertical descomenta a seguinte liña
+python3 ermoapp_v.py
+
+# Finalización
 deactivate
