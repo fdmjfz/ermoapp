@@ -19,5 +19,5 @@ else
     source ./ermovenv/bin/activate
 fi
 
-python3 ermoapp.py
+python3 pruebas.py
 deactivate
