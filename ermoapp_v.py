@@ -833,7 +833,7 @@ def display_main_window(mw):
         idx += 1
 
     hc12_width = x - 1
-    hc12_height = 15
+    hc12_height = 10
     hc12_win = mw.subpad(hc12_height, hc12_width, 20, 1)
     hc12_win.border(*agenda_border)
     hc12_win.addstr(0, 2, f" {gconfig['hc12']['name']} ")
@@ -842,7 +842,7 @@ def display_main_window(mw):
     agenda_width = x - 1
     agenda_height = 15
     agenda_win = mw.subpad(agenda_height, agenda_width,
-                           20 + hc12_height, 1)
+                           y - agenda_height, 1)
     agenda_win.border(*agenda_border)
     agenda_win.addstr(0, 2, f" {gconfig['agenda']['name']} ")
     display_agenda_preview(agenda_win)
