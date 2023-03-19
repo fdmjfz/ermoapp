@@ -834,7 +834,7 @@ def display_main_window(mw):
 
     hc12_width = (x // 2) - 1
     hc12_height = (y // 2)
-    hc12_win = mw.subpad(hc12_height, hc12_width, hc12_height, 1)
+    hc12_win = mw.subpad(hc12_height, hc12_width, hc12_height, 0)
     hc12_win.border(*agenda_border)
     hc12_win.addstr(0, 2, f" {gconfig['hc12']['name']} ")
     display_hc12_preview(hc12_win)
