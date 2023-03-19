@@ -202,6 +202,7 @@ def display_file_text(stdscr, y, x,
             except IndexError:
                 error_list = ['Índice fóra de rango.']
                 display_alert(stdscr, error_list, 'error')
+                return
 
             with open(AGENDA_TXT_PATH, "r+") as f:
                 lines = f.readlines()
