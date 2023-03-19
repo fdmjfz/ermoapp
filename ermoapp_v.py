@@ -823,7 +823,7 @@ def display_main_window(mw):
         bme_win.addstr(idx, 8, bme280[key])
         idx += 1
 
-    tele_win = mw.subwin(5, 16, 2, 19)
+    tele_win = mw.subwin(5, 16, 2, 20)
     tele_win.border(*sw_border)
     tele_win.addstr(0, 1, " Sistema ")
     idx = 1
@@ -847,7 +847,7 @@ def display_main_window(mw):
     agenda_win.addstr(0, 2, f" {gconfig['agenda']['name']} ")
     display_agenda_preview(agenda_win)
 
-    hc12_config_win = mw.subpad(5, 16, 2, 37)
+    hc12_config_win = mw.subpad(5, 16, 2, 39)
     hc12_config_win.border(*sw_border)
     hc12_config_win.addstr(0, 1, " HC12 Conf. ")
     hc12_config_win.addstr(1, 1, 'Canle: ')
