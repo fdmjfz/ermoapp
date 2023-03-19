@@ -836,7 +836,7 @@ def display_main_window(mw):
     hc12_width = x - 2
     hc12_height = 15
     agenda_width = hc12_width
-    agenda_height = hc12_height
+    agenda_height = hc12_height - 5
     agenda_ypos = y - agenda_height
 
     hc12_win = mw.subpad(hc12_height, hc12_width,
