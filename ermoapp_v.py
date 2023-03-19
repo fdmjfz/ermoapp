@@ -199,17 +199,18 @@ def display_file_text(stdscr, y, x,
                 error_list = ["Ingresa únicamente caracteres numéricos."]
                 display_alert(stdscr, error_list, 'error')
                 return
-            except IndexError:
-                error_list = ['Índice fóra de rango.']
-                display_alert(stdscr, error_list, 'error')
-                return
 
             with open(AGENDA_TXT_PATH, "r+") as f:
                 lines = f.readlines()
-                del lines[idx_rm]
-                f.seek(0)
-                f.truncate()
-                f.writelines(lines)
+                try:
+                    del lines[idx_rm]
+                    f.seek(0)
+                    f.truncate()
+                    f.writelines(lines)
+                except IndexError:
+                    error_list = ['Índice fóra de rango.']
+                    display_alert(stdscr, error_list, 'error')
+                    return
             return
 
         start_text = end_text - padyrange
