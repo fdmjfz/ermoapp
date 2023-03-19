@@ -842,7 +842,7 @@ def display_main_window(mw):
     agenda_width = x - 1
     agenda_height = 10
     agenda_win = mw.subpad(agenda_height, agenda_width,
-                           hc12_height + agenda_height, 1)
+                           20 + hc12_height, 1)
     agenda_win.border(*agenda_border)
     agenda_win.addstr(0, 2, f" {gconfig['agenda']['name']} ")
     display_agenda_preview(agenda_win)
