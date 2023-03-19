@@ -133,7 +133,7 @@ def display_file_text(stdscr, y, x,
         info = " <- >> Inicio   ^Arriba v Abaixo "
         stdscr.addstr(y - 1, 2, info)
         if subinfo:
-            stdscr.addstr(y - 2, 40, subinfo)
+            stdscr.addstr(y - 1, 36, subinfo)
 
         stdscr.addstr(0, 3, " MENÚ ")
         stdscr.hline(1, 1, 0, x - 2)
