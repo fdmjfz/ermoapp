@@ -847,7 +847,7 @@ def display_main_window(mw):
     agenda_win.addstr(0, 2, f" {gconfig['agenda']['name']} ")
     display_agenda_preview(agenda_win)
 
-    hc12_config_win = mw.subpad(5, 16, 2, 41)
+    hc12_config_win = mw.subpad(5, 16, 2, 42)
     hc12_config_win.border(*sw_border)
     hc12_config_win.addstr(0, 1, " HC12 Conf. ")
     hc12_config_win.addstr(1, 1, 'Canle: ')
