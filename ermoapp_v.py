@@ -832,20 +832,25 @@ def display_main_window(mw):
         tele_win.addstr(idx, 8, tele_data[key])
         idx += 1
 
-    hc12_width = x - 1
-    hc12_height = 10
-    hc12_win = mw.subpad(hc12_height, hc12_width, 20, 1)
+    # Horizontales
+    hc12_width = x - 2
+    hc12_height = 15
+    agenda_width = hc12_width
+    agenda_height = hc12_height
+    agenda_ypos = y - agenda_height
+
+    hc12_win = mw.subpad(hc12_height, hc12_width,
+                         agenda_ypos - hc12_height, 1)
     hc12_win.border(*agenda_border)
     hc12_win.addstr(0, 2, f" {gconfig['hc12']['name']} ")
     display_hc12_preview(hc12_win)
 
-    agenda_width = x - 1
-    agenda_height = 15
     agenda_win = mw.subpad(agenda_height, agenda_width,
-                           y - agenda_height, 1)
+                           agenda_ypos, 1)
     agenda_win.border(*agenda_border)
     agenda_win.addstr(0, 2, f" {gconfig['agenda']['name']} ")
     display_agenda_preview(agenda_win)
+    # ==========
 
     hc12_config_win = mw.subpad(5, 16, 2, 42)
     hc12_config_win.border(*sw_border)
