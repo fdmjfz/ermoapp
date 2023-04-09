@@ -425,7 +425,7 @@ def hc12_get_config():
             br_response = br_response.replace('\r\n', '')
 
             if br_response != f'OK+B{START_BAUDRATE}':
-                9/0
+                gconfig['hc12']['status'] = 'NOK'
 
         time.sleep(0.1)
 
